@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Datos Personales</title>
+</head>
+<body>
+    <!-- encabezado -->
+     <header>
+    <a href="#">Reservas</a>
+    <a href="#">Condiciones</a>
+    <a href="principal.html"><img src="hola.png" alt="error"></a>
+    <a href="#">Entrar</a>
+    </header>
+    <!-- Registro de datos personales -->
+    <main>
+        <h2 style="text-align:center;">datos personales</h2>
+    <form>
+
+        <label>Nombres</label>
+        <input type="text" name="nombre" />
+
+        <label>Apellido Paterno</label>
+        <input type="text" name="apellidoP" />
+
+        <label>Apellido Materno</label>
+        <input type="text" name="apellidoM" />
+
+        <label>Documento</label>
+        <select name="tipo_documento">
+            <option value="">Seleccionar opción</option>
+            <option value="dni">DNI</option>
+            <option value="pasaporte">Pasaporte</option>
+        </select>
+
+        <label>Número Documento/pasaporte</label>
+        <input type="text" name="numero_documento" />
+
+        <label>Teléfono</label>
+        <input type="text" name="telefono" />
+
+        <label>Correo Electrónico</label>
+        <input type="email" name="correo" />
+
+        <label>Razón Social</label>
+        <input type="text" name="razon_social" />
+
+        <label>NIT/CI</label>
+        <input type="text" name="nit_ci" />
+
+        <br><br>
+
+        <label>
+            <input type="checkbox" name="condiciones_uso">
+            condiciones de uso
+        </label>
+        <br>
+        <label>
+            <input type="checkbox" name="terminos_condiciones">
+            términos y condiciones
+        </label>
+
+        <br><br>
+
+        <button type="submit">Continuar</button>
+        <button type=""><a href="busqueda.html">Cancelar</a></button>
+
+    </form>
+    </main>
+    <footer>
+    Todos los derechos reservados DreamFlying © 2025
+    </footer>
+</body>
+</html>

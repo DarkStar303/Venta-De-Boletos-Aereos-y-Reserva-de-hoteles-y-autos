@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venta de Vuelos, Hoteles y Autos</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+ <!-- encabezado con logo,inicio sesion etc -->
+<header>
+    <a href="#">Reservas</a>
+    <a href="#">Condiciones</a>
+    <a href="principal.html"><img src="hola.png" alt="error"></a>
+    <a href="#">Entrar</a>
+</header>
+ 
+<main>
+ 
+    <!-- Menu de servicios -->
+    <section >
+        <article>
+            <img src="hola.png" width="100" height="100">
+            <span>Vuelos</span>
+        </article>
+ 
+        <article>
+            <img src="hola.png" width="100" height="100">
+            <span>Hoteles</span>
+        </article>
+ 
+        <article>
+            <img src="hola.png" width="100" height="100">
+            <span>Autos</span>
+        </article>
+    </section>
+ 
+    <!-- FORMULARIO VUELOS -->
+   
+    <section id="vuelos">
+        <h2>Reserva de Vuelos</h2>
+        <label for="seleccion">Solo Ida</label>
+        <input type="radio" name="seleccion" id="">
+        <label for="seleccion">Ida y Vuelta</label>
+        <input type="radio" name="seleccion" id="">
+        <label>Origen</label>
+        <input type="text">
+ 
+        <label>Destino</label>
+        <input type="text">
+ 
+        <label>Fecha de Ida</label>
+        <input type="date">
+ 
+        <label>Fecha de Retorno</label>
+        <input type="date">
+
+        <label for="Nro Pasajeros">Nro Pasajeros</label>
+        <select name="pax" id="">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+        <label for="Nro Pasajeros menores">Nro Pasajeros menores</label>
+        <select name="paxM" id="">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+ 
+        <button>Buscar Vuelos</button>
+    </section>
+ 
+    <!-- FORMULARIO HOTELES -->
+    <section id="hoteles">
+        <h2>Reserva de Hoteles</h2>
+        <label>Ciudad</label>
+        <input type="text">
+ 
+        <label>Fecha entrada</label>
+        <input type="date">
+ 
+        <label>Fecha salida</label>
+        <input type="date">
+        
+        <label for="Nro Habitaciones">Nro habitaciones</label>
+        <select name="Habitaciones" id="">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+        </select>
+
+        <label for="Nro adultos">Nro adultos</label>
+        <select name="adultos" id="">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        <label for="Nro niños">Nro niños</label>
+        <select name="niños" id="">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
+        <button>Buscar Hoteles</button>
+    </section>
+ 
+    <!-- FORMULARIO AUTOS -->
+    <section id="autos">
+        <h2>Renta de Autos</h2>
+        <input type="checkbox" name="" id="">
+        <label for="devolucion">"misma oficina de devolucion"</label>
+        <input type="checkbox" name="" id="">
+        <label for="tipoConductor">conductor entre 30 y  65 años</label>
+        <label>Origen</label>
+        <input type="text">
+        <label>Devolucion</label>
+        <input type="text">
+        <label>Fecha y hora de recogida</label>
+        <input type="datetime-local">
+ 
+        <label>Fecha y hora de entrega</label>
+        <input type="datetime-local">
+ 
+        <button>Buscar Autos</button>
+    </section>
+ 
+</main>
+ 
+<footer>
+    Todos los derechos reservados DreamFlying © 2025
+</footer>
+ 
+<script src="JAVASCRIPT/scripts.js"></script>
+</body>
+</html>
