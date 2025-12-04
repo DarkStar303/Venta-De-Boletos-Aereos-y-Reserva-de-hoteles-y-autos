@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+}
+
+#encabezado {
+    background-color: #d0eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#izquierda, #centro, #derecha {
+    display: flex;
+    align-items: center;
+}
+
+#reserva, #condiciones {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#entrar {
+    color: #1d4e89;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#centro {
+    justify-content: center;
+    flex: 1;
+}
+
+#encabezado .logo img {
+    height: 100px;
+}
+
+#titulo- {
+    text-align: center;
+    margin: 25px 0;
+    font-size: 28px;
+    color: #1d4e89;
+}
+
+.contenedorconfirmacion {
+    width: 90%;
+    max-width: 600px;
+    margin: auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.dato {
+    font-size: 18px;
+    margin: 12px 0;
+}
+
+.dato span {
+    color: #1d4e89;
+    font-weight: bold;
+}
+
+.acciones {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.boton {
+    background-color: #1d4e89;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    margin: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s ease;
+}
+
+.boton:hover {
+    background-color: #174b72;
+    transform: scale(1.05);
+}
+
+#PiePagina {
+    background-color: #1d4e89;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+    font-size: 14px;
+}

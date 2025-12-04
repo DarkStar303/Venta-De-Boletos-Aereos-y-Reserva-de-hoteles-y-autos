@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+#encabezado {
+    background-color: #d0eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#izquierda, #centro, #derecha {
+    display: flex;
+    align-items: center;
+}
+
+#reserva, #condiciones {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#entrar {
+    color: #1d4e89;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#centro {
+    justify-content: center;
+    flex: 1;
+}
+
+#encabezado .logo img {
+    height: 100px;
+}
+
+#contenedorlogin {
+    max-width: 500px;
+    margin: 50px auto;
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#titulo {
+    text-align: center;
+    font-size: 24px;
+    color: #1d4e89;
+    margin-bottom: 20px;
+}
+
+.FormLabel {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.FormInput {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.boton {
+    width: 100%;
+    padding: 12px;
+    background-color: #1d4e89;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s;
+}
+
+.boton:hover {
+    background-color: #174b72;
+}
+
+#PiePagina {
+    background-color: #1d4e89;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+}

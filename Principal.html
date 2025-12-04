@@ -4,59 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Venta de Vuelos, Hoteles y Autos</title>
-    <link rel="stylesheet" href="/css/estilos.css">
+    <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
  <!-- encabezado con logo,inicio sesion etc -->
-<header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="error"></a>
-    <a href="#">Entrar</a>
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
+    </div>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
 </header>
+
  
 <main>
- 
+    <h1>Venta de Vuelos, Hoteles y Autos</h1>
     <!-- Menu de servicios -->
-    <section >
-        <article>
-            <img src="hola.png" width="100" height="100">
-            <span>Vuelos</span>
+    <section class="menuPrincipal">
+        <article class="acciones">
+            <img src="iconoavion.png" width="100" height="100" alt="">
+            <span class="accionnombre">Vuelos</span>
         </article>
  
-        <article>
-            <img src="hola.png" width="100" height="100">
-            <span>Hoteles</span>
+        <article class="acciones">
+            <img src="iconocasa.png" width="100" height="100" alt="">
+            <span class="accionnombre">Hoteles</span>
         </article>
  
-        <article>
-            <img src="hola.png" width="100" height="100">
-            <span>Autos</span>
+        <article class="acciones">
+            <img src="iconoautos.png" width="100" height="100" alt="">
+            <span class="accionnombre">Autos</span>
         </article>
     </section>
- 
-    <!-- FORMULARIO VUELOS -->
-   
-    <section id="vuelos">
-        <h2>Reserva de Vuelos</h2>
-        <label for="seleccion">Solo Ida</label>
-        <input type="radio" name="seleccion" id="">
-        <label for="seleccion">Ida y Vuelta</label>
-        <input type="radio" name="seleccion" id="">
-        <label>Origen</label>
-        <input type="text">
- 
-        <label>Destino</label>
-        <input type="text">
- 
-        <label>Fecha de Ida</label>
-        <input type="date">
- 
-        <label>Fecha de Retorno</label>
-        <input type="date">
 
-        <label for="Nro Pasajeros">Nro Pasajeros</label>
-        <select name="pax" id="">
+    <!-- FORMULARIO VUELOS -->
+    <section id="vuelos" class="Formularios">
+        <h2>Reserva de Vuelos</h2>
+        <label for="soloida" class="radio">Solo Ida</label>
+        <input type="radio" name="seleccion" id="soloida">
+        <label for="idavuelta" class="radio">Ida y Vuelta</label>
+        <input type="radio" name="seleccion" id="idavuelta">
+        
+        <label for="origen" class="FormLabel">Origen</label>
+        <input type="text" id="origen" class="FormInput">
+ 
+        <label for="destino" class="FormLabel">Destino</label>
+        <input type="text" id="destino" class="FormInput">
+ 
+        <label for="fechaida" class="FormLabel">Fecha de Ida</label>
+        <input type="date" id="fechaida" class="FormInput">
+ 
+        <label for="fecharetorno" class="FormLabel">Fecha de Retorno</label>
+        <input type="date" id="fecharetorno" class="FormInput">
+
+        <label for="nropasajeros" class="FormLabel">Nro Pasajeros</label>
+        <select name="pax" id="nropasajeros" class="FormInput">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -67,8 +76,9 @@
             <option value="8">8</option>
             <option value="9">9</option>
         </select>
-        <label for="Nro Pasajeros menores">Nro Pasajeros menores</label>
-        <select name="paxM" id="">
+
+        <label for="nro-pasajeros-menores" class="FormLabel">Nro Pasajeros menores</label>
+        <select name="paxM" id="nropasajerosmenores" class="FormInput">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -80,23 +90,25 @@
             <option value="9">9</option>
         </select>
  
-        <button>Buscar Vuelos</button>
+        <!-- Botón como enlace -->
+     <a href="resultado_busqueda.html" class="Buscador">Buscar Vuelos</a>
+
     </section>
  
     <!-- FORMULARIO HOTELES -->
-    <section id="hoteles">
+    <section id="hoteles" class="Formularios">
         <h2>Reserva de Hoteles</h2>
-        <label>Ciudad</label>
-        <input type="text">
+        <label for="ciudad" class="FormLabel">Ciudad</label>
+        <input type="text" id="ciudad" class="FormInput">
  
-        <label>Fecha entrada</label>
-        <input type="date">
+        <label for="fecha-entrada" class="FormLabel">Fecha entrada</label>
+        <input type="date" id="fechaentrada" class="FormInput">
  
-        <label>Fecha salida</label>
-        <input type="date">
+        <label for="fecha-salida" class="FormLabel">Fecha salida</label>
+        <input type="date" id="fechasalida" class="FormInput">
         
-        <label for="Nro Habitaciones">Nro habitaciones</label>
-        <select name="Habitaciones" id="">
+        <label for="nro-habitaciones" class="FormLabel">Nro habitaciones</label>
+        <select name="habitaciones" id="nro-habitaciones" class="FormInput">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -108,46 +120,57 @@
             <option value="9">9</option>
         </select>
 
-        <label for="Nro adultos">Nro adultos</label>
-        <select name="adultos" id="">
+        <label for="nroadultos" class="FormLabel">Nro adultos</label>
+        <select name="adultos" id="nroadultos" class="FormInput">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
         </select>
-        <label for="Nro niños">Nro niños</label>
-        <select name="niños" id="">
+
+        <label for="nroniños" class="FormLabel">Nro niños</label>
+        <select name="niños" id="nroniños" class="FormInput">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
         </select>
-        <button>Buscar Hoteles</button>
+
+       <a href="resultado_busqueda.html" class="Buscador">Buscar hoteles</a>
     </section>
  
     <!-- FORMULARIO AUTOS -->
-    <section id="autos">
-        <h2>Renta de Autos</h2>
-        <input type="checkbox" name="" id="">
-        <label for="devolucion">"misma oficina de devolucion"</label>
-        <input type="checkbox" name="" id="">
-        <label for="tipoConductor">conductor entre 30 y  65 años</label>
-        <label>Origen</label>
-        <input type="text">
-        <label>Devolucion</label>
-        <input type="text">
-        <label>Fecha y hora de recogida</label>
-        <input type="datetime-local">
- 
-        <label>Fecha y hora de entrega</label>
-        <input type="datetime-local">
- 
-        <button>Buscar Autos</button>
-    </section>
- 
+<section id="autos" class="Formularios">
+    <h2>Renta de Autos</h2>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="mismaoficina" class="checkbox">
+        <label for="mismaoficina" class="FormLabel">Misma oficina de devolución</label>
+    </div>
+
+    <div class="checkbox-group">
+        <input type="checkbox" id="conductoredad" class="checkbox">
+        <label for="conductoredad" class="FormLabel">Conductor entre 30 y 65 años</label>
+    </div>
+
+    <label for="origenauto" class="FormLabel">Origen</label>
+    <input type="text" id="origenauto" class="FormInput">
+
+    <label for="devolucion" class="FormLabel">Devolución</label>
+    <input type="text" id="devolucion" class="FormInput">
+
+    <label for="fecharecogida" class="FormLabel">Fecha y hora de recogida</label>
+    <input type="datetime-local" id="fecharecogida" class="FormInput">
+
+    <label for="fechaentrega" class="FormLabel">Fecha y hora de entrega</label>
+    <input type="datetime-local" id="fechaentrega" class="FormInput">
+
+    <a href="resultado_busqueda.html" class="Buscador">Buscar autos</a>
+</section>
+
 </main>
  
-<footer>
+<footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
 </footer>
  

@@ -1,0 +1,131 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc;
+}
+
+#encabezado {
+    background-color: #d0eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#izquierda, #centro, #derecha {
+    display: flex;
+    align-items: center;
+}
+
+#reserva, #condiciones {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#entrar {
+    color: #1d4e89;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#centro {
+    justify-content: center;
+    flex: 1;
+}
+
+#encabezado .logo img {
+    height: 100px;
+}
+
+#seleccionDatos {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.titulo {
+    text-align: center;
+    font-size: 24px;
+    color: #1d4e89;
+    margin-bottom: 20px;
+}
+
+#formDatos {
+    margin: 0 auto;
+    max-width: 600px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.datos {
+    margin-bottom: 20px;
+}
+
+.formLabel {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.FormInput,
+.formselec {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.checkboxLabel {
+    font-size: 14px;
+    color: #333;
+}
+
+.formcheckbox {
+    margin-right: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #1d4e89;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 48%;
+}
+
+.btn:hover {
+    background-color: #174b72;
+}
+
+.btn-link {
+    color: white;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+#footer {
+    background-color: #1d4e89;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+    font-size: 14px;
+}

@@ -1,0 +1,197 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+}
+
+#encabezado {
+    background-color: #d0eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#izquierda, #centro, #derecha {
+    display: flex;
+    align-items: center;
+}
+
+#reserva, #condiciones {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#entrar {
+    color: #1d4e89;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#centro {
+    justify-content: center;
+    flex: 1;
+}
+
+#encabezado .logo img {
+    height: 100px;
+}
+
+#contenedorBusqueda {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+#tituloReservas {
+    text-align: center;
+    font-size: 28px;
+    color: #1d4e89;
+    margin-bottom: 20px;
+}
+
+#resultados {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cuadroResultado {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 300px;
+}
+
+.informacion {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.aerolinea {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+
+.detalles {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.textoaerolinea {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d4e89;
+}
+
+.escala {
+    font-size: 14px;
+    color: #777;
+    text-transform: capitalize;
+}
+
+.ruta,
+.equipaje,
+.tiempo {
+    font-size: 14px;
+    color: #333;
+}
+
+.precio {
+    font-size: 18px;
+    font-weight: bold;
+    color: #1d4e89;
+    text-align: right;
+}
+
+.boton {
+    background-color: #1d4e89;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.boton:hover {
+    background-color: #174b72;
+}
+
+#navegacion {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.linknav {
+    color: #1d4e89;
+    text-decoration: none;
+    margin: 0 5px;
+    font-size: 18px;
+}
+
+.linknav:hover {
+    text-decoration: underline;
+}
+
+.actual {
+    font-weight: bold;
+    color: #1d4e89;
+}
+
+.puntos {
+    font-size: 18px;
+    color: #777;
+}
+
+#inicio {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 20px;
+    background-color: #1d4e89;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+#inicio a {
+    color: white;
+    text-decoration: none;
+}
+
+#inicio:hover {
+    background-color: #174b72;
+}
+
+#PiePagina {
+    background-color: #1d4e89;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    font-size: 14px;
+}

@@ -1,0 +1,153 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f8ff;
+    margin: 0;
+    padding: 0;
+}
+
+#encabezado {
+    background-color: #d0eaff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#izquierda, #centro, #derecha {
+    display: flex;
+    align-items: center;
+}
+
+#reserva, #condiciones {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#entrar {
+    color: #1d4e89;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#centro {
+    justify-content: center;
+    flex: 1;
+}
+
+#encabezado .logo img {
+    height: 100px;
+}
+
+.menuPrincipal {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+    margin: 30px 20px;
+    padding: 20px;
+    background-color: #d0eaff;
+    border-radius: 15px;
+    flex-wrap: wrap;
+}
+
+.acciones {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #1d4e89;
+    border-radius: 10px;
+    color: white;
+    width: 150px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.acciones:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.accionnombre {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.Formularios {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f0f8ff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h1,h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #1d4e89;
+    margin-bottom: 20px;
+}
+
+.FormLabel {
+    font-size: 16px;
+    margin-top: 10px;
+    display: block;
+    color: #333;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.FormInput {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.radio {
+    margin-right: 5px;
+}
+
+.Buscador {
+    background-color: #1d4e89;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.Buscador:hover {
+    background-color: #174b72;
+}
+
+#PiePagina {
+    background-color: #1d4e89;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+}
