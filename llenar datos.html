@@ -3,72 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>Datos Personales</title>
+    <link rel="stylesheet" href="CSS/estilos_datos.css">
 </head>
 <body>
-    <!-- encabezado -->
-     <header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="error"></a>
-    <a href="#">Entrar</a>
-    </header>
+ <!-- encabezado con logo,inicio sesion etc -->
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
+    </div>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
+</header>
     <!-- Registro de datos personales -->
-    <main>
-        <h2 style="text-align:center;">datos personales</h2>
-    <form>
+    <section id="seleccionDatos">
+        <h2 class="titulo">Datos Personales</h2>
+        <form id="formDatos">
+            <div class="datos">
+                <label for="nombre" class="formLabel">Nombres</label>
+                <input type="text" id="nombre" name="nombre" class="FormInput"/>
+            </div>
 
-        <label>Nombres</label>
-        <input type="text" name="nombre" />
+            <div class="datos">
+                <label for="apellidoP" class="formLabel">Apellido Paterno</label>
+                <input type="text" id="apellidoP" name="apellidoP" class="FormInput"/>
+            </div>
 
-        <label>Apellido Paterno</label>
-        <input type="text" name="apellidoP" />
+            <div class="datos">
+                <label for="apellidoM" class="formLabel">Apellido Materno</label>
+                <input type="text" id="apellidoM" name="apellidoM" class="FormInput"/>
+            </div>
 
-        <label>Apellido Materno</label>
-        <input type="text" name="apellidoM" />
+            <div class="datos">
+                <label for="tipo_documento" class="formLabel">Documento</label>
+                <select id="tipo_documento" name="tipo_documento" class="formselec">
+                    <option value="">Seleccionar opción</option>
+                    <option value="dni">DNI</option>
+                    <option value="pasaporte">Pasaporte</option>
+                </select>
+            </div>
 
-        <label>Documento</label>
-        <select name="tipo_documento">
-            <option value="">Seleccionar opción</option>
-            <option value="dni">DNI</option>
-            <option value="pasaporte">Pasaporte</option>
-        </select>
+            <div class="datos">
+                <label for="numero_documento" class="formLabel">Número Documento/Pasaporte</label>
+                <input type="text" id="numero_documento" name="numero_documento" class="FormInput"/>
+            </div>
 
-        <label>Número Documento/pasaporte</label>
-        <input type="text" name="numero_documento" />
+            <div class="datos">
+                <label for="telefono" class="formLabel">Teléfono</label>
+                <input type="text" id="telefono" name="telefono" class="FormInput"/>
+            </div>
 
-        <label>Teléfono</label>
-        <input type="text" name="telefono" />
+            <div class="datos">
+                <label for="correo" class="formLabel">Correo Electrónico</label>
+                <input type="email" id="correo" name="correo" class="FormInput"/>
+            </div>
 
-        <label>Correo Electrónico</label>
-        <input type="email" name="correo" />
+            <div class="datos">
+                <label for="razon_social" class="formLabel">Razón Social</label>
+                <input type="text" id="razon_social" name="razon_social" class="FormInput"/>
+            </div>
 
-        <label>Razón Social</label>
-        <input type="text" name="razon_social" />
+            <div class="datos">
+                <label for="nit_ci" class="formLabel">NIT/CI</label>
+                <input type="text" id="nit_ci" name="nit_ci" class="FormInput"/>
+            </div>
 
-        <label>NIT/CI</label>
-        <input type="text" name="nit_ci" />
+            <div class="datos">
+                <label for="condiciones_uso" class="checkboxLabel">
+                    <input type="checkbox" id="condiciones_uso" name="condiciones_uso" class="formcheckbox">
+                    Condiciones de uso
+                </label>
+            </div>
 
-        <br><br>
+            <div class="datos">
+                <label for="terminos_condiciones" class="checkboxLabel">
+                    <input type="checkbox" id="terminos_condiciones" name="terminos_condiciones" class="formcheckbox">
+                    Términos y condiciones
+                </label>
+            </div>
 
-        <label>
-            <input type="checkbox" name="condiciones_uso">
-            condiciones de uso
-        </label>
-        <br>
-        <label>
-            <input type="checkbox" name="terminos_condiciones">
-            términos y condiciones
-        </label>
+            <div class="form-actions">
+                <button type="submit" class="btn" id="continuar"><a href="confirmacion.html" class="btn-link">continuar</a></button>
+                <button type="button" class="btn" id="cancelar"><a href="resultado_busqueda.html" class="btn-link">Cancelar</a></button>
+            </div>
+        </form>
+    </section>
 
-        <br><br>
-
-        <button type="submit">Continuar</button>
-        <button type=""><a href="busqueda.html">Cancelar</a></button>
-
-    </form>
-    </main>
-    <footer>
-    Todos los derechos reservados DreamFlying © 2025
+    <!-- Pie de página -->
+    <footer id="footer">
+        Todos los derechos reservados DreamFlying © 2025
     </footer>
 </body>
 </html>

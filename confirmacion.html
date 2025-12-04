@@ -3,32 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Confirmar Datos</title>
+    <link rel="stylesheet" href="CSS/estilos_confirmacion.css">
 </head>
 <body>
-    <!-- encabezado -->
-    <header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="error"></a>
-    <a href="#">Entrar</a>
-    </header>
-    <h2 style="text-align:center;">confirmar</h2>
-    <!-- confirmacion de datos y id para manipularlos con js -->
-    <div id="confirmacion">
-        <p><strong>NOMBRE:</strong> <span id="confirmar_nombre"></span></p>
-        <p><strong>APELLIDO:</strong> <span id="confirmar_apellido"></span></p>
-        <p><strong>DOCUMENTO:</strong> <span id="confirmar_documento"></span></p>
-        <p><strong>NUMERO DOCUMENTO:</strong> <span id="confirmar_numero_documento"></span></p>
-        <p><strong>TELEFONO:</strong> <span id="confirmar_telefono"></span></p>
-        <p><strong>CORREO ELECTRONICO:</strong> <span id="confirmar_correo"></span></p>
-        <p><strong>RAZON SOCIAL:</strong> <span id="confirmar_razon_social"></span></p>
-        <p><strong>NIT/CI:</strong> <span id="confirmar_nit_ci"></span></p>
-        <!-- botones con funcionalidad pagar o cancelar -->
-        <button type="button" onclick="pagar()">PAGAR</button>
-        <button type="button" onclick="cancelar()">CANCELAR</button>
+
+ <!-- encabezado con logo,inicio sesion etc -->
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
     </div>
-<footer>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
+</header>
+    <h2 id="titulo">Confirmar</h2>
+
+    <!-- Confirmación de datos -->
+    <div id="confirmacion" class="contenedorconfirmacion">
+
+        <p class="dato"><strong>NOMBRE:</strong> <span id="confirmar_nombre"></span></p>
+        <p class="dato"><strong>APELLIDO:</strong> <span id="confirmar_apellido"></span></p>
+        <p class="dato"><strong>DOCUMENTO:</strong> <span id="confirmar_documento"></span></p>
+        <p class="dato"><strong>NUMERO DOCUMENTO:</strong> <span id="confirmar_numero_documento"></span></p>
+        <p class="dato"><strong>TELEFONO:</strong> <span id="confirmar_telefono"></span></p>
+        <p class="dato"><strong>CORREO ELECTRONICO:</strong> <span id="confirmar_correo"></span></p>
+        <p class="dato"><strong>RAZON SOCIAL:</strong> <span id="confirmar_razon_social"></span></p>
+        <p class="dato"><strong>NIT/CI:</strong> <span id="confirmar_nit_ci"></span></p>
+
+        <!-- Botones -->
+        <div class="acciones">
+            <button id="pagar" class="boton" type="button" onclick="pagar()">PAGAR</button>
+            <button id="cancelar" class="boton" type="button" onclick="cancelar()">CANCELAR</button>
+        </div>
+
+    </div>
+
+    <!-- Pie de página -->
+    <footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
-    </footer>
+</footer>
+
 </body>
 </html>

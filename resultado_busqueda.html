@@ -1,123 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="css/estilos_busqueda.css">
 </head>
 <body>
-<!-- encabezado -->
-    <header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="error"></a>
-    <a href="#">Entrar</a>
-    </header>
 
-<main>
-    <!--todos los resultados -->
-    <section >
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>10:00 - 11:00</p>
+ 
+ <!-- encabezado con logo,inicio sesion etc -->
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
+    </div>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
+</header>
+
+<main id="contenedorBusqueda">
+    <!-- Todos los resultados -->
+     <!-- 1 -->
+    <section id="resultados" class="resultado">
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">directo</h5>
+                    <p class="ruta">La Paz-Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">10:00 - 11:00</p>
                 </div>
             </div>
-
-            <div>
+            <div class="precio">
                 <p>811 Bs</p>
             </div>
+            <div class="seleccion">
+                <a href="llenar datos.html" class="boton">Seleccionar</a>
 
-            <div>
-                <button>Seleccionar</button>
-                <span>⋮</span>
             </div>
         </article>
+        <!-- 2 -->
 
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>10:00 - 11:00</p>
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">directo</h5>
+                    <p class="ruta">La Paz-Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">10:00 - 11:00</p>
                 </div>
             </div>
-
-            <div>
+            <div class="precio">
                 <p>811 Bs</p>
             </div>
+            <div class="seleccion">
+                <a href="llenar datos.html" class="boton">Seleccionar</a>
 
-            <div>
-                <button>Seleccionar</button>
-                <span>⋮</span>
             </div>
         </article>
-
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>10:00 - 11:00</p>
+        <!-- 3 -->
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">directo</h5>
+                    <p class="ruta">La Paz-Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">10:00 - 11:00</p>
                 </div>
             </div>
-
-            <div>
+            <div class="precio">
                 <p>811 Bs</p>
             </div>
+            <div class="seleccion">
+                <a href="llenar datos.html" class="boton">Seleccionar</a>
 
-            <div>
-                <button>Seleccionar</button>
-                <span>⋮</span>
             </div>
         </article>
-
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>10:00 - 11:00</p>
+        <!-- 4 -->
+         <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">directo</h5>
+                    <p class="ruta">La Paz-Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">10:00 - 11:00</p>
                 </div>
             </div>
-
-            <div>
+            <div class="precio">
                 <p>811 Bs</p>
             </div>
+            <div class="seleccion">
+                <a href="llenar datos.html" class="boton">Seleccionar</a>
 
-            <div>
-                <button>Seleccionar</button>
-                <span>⋮</span>
             </div>
         </article>
-
-        
-
         
         
     </section>
 
-    <!-- PAGINACION hecho con IA revisar funcionalidad-->
-    <nav>
-        <a href="#">«</a>
-        <a href="#">‹</a>
-        <a href="#">1</a>
-        <span>2</span>
-        <span>…</span>
-        <a href="#">16</a>
-        <a href="#">17</a>
-        <a href="#">›</a>
-        <a href="#">»</a>
+    <!-- Paginación -->
+    <nav id="navegacion" class="navegacion">
+        <a href="#" class="linknav">«</a>
+        <a href="#" class="linknav">‹</a>
+        <a href="#" class="linknav">1</a>
+        <span class="actual">2</span>
+        <span class="puntos">…</span>
+        <a href="#" class="linknav">16</a>
+        <a href="#" class="linknav">17</a>
+        <a href="#" class="linknav">›</a>
+        <a href="#" class="linknav">»</a>
     </nav>
 
-        <button><a href="principal.html">nicio</a></button>
+    <!-- Botón de inicio -->
+    <button id="inicio" class="boton"><a href="principal.html">Inicio</a></button>
 </main>
 
-<footer>
+<!-- Pie de página -->
+<footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
-    </footer>
+</footer>
 
 </body>
 </html>

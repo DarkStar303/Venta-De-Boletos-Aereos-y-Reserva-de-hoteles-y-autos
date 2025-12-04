@@ -1,33 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio Sesion</title>
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="css/estilos_login.css">
 </head>
-<body>
-    <!-- encabezado -->
-    <header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="error"></a>
-    <a href="#">Entrar</a>
-    </header>
-    <!-- formulario -->
-    <main>
-        <form action="">
-        <h2>inicio sesion</h2>
-        <label for="correo">correo electronico</label>
-        <input type="email" required>
-        <label for="correo">contraseña</label>
-        <input type="email" required>
-        <button>siguiente</button>
-        <button>atras</button>
+
+ <!-- encabezado con logo,inicio sesion etc -->
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
+    </div>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
+</header>
+
+    <!-- Contenido principal (Formulario de inicio de sesión) -->
+    <section id="contenedorlogin">
+        <h2 id="titulo">Inicio de sesión</h2>
+        
+        <form id="formularioLogin">
+            <label for="correo" class="FormLabel">Correo electrónico</label>
+            <input type="email" id="correo" class="FormInput" required>
+
+            <label for="contraseña" class="FormLabel">Contraseña</label>
+            <input type="password" id="contraseña" class="FormInput" required>
+
+            <button type="submit" id="siguiente" class="boton">Siguiente</button>
+            <button type="button" id="atras" class="boton">Atrás</button>
         </form>
-    </main>
-    <!-- pie de pagina -->
-    <footer>
-    Todos los derechos reservados DreamFlying © 2025
+    </section>
+
+    <!-- Pie de pagina -->
+    <footer id="PiePagina">
+        Todos los derechos reservados DreamFlying © 2025
     </footer>
 </body>
 </html>

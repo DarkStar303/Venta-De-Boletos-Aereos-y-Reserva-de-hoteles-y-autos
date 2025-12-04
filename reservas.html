@@ -1,108 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservas</title>
+    <link rel="stylesheet" href="css/estilos_reservas.css">
 </head>
 <body>
 
-<!-- ENCABEZADO -->
-<header>
-    <a href="#">Reservas</a>
-    <a href="#">Condiciones</a>
-    <a href="principal.html"><img src="hola.png" alt="Logo"></a>
-    <a href="#">Entrar</a>
+ <!-- encabezado con logo,inicio sesion etc -->
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas</a>
+        <a href="#" id="condiciones">Condiciones</a>
+    </div>
+
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+
+    <div id="derecha">
+        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+    </div>
 </header>
 
-<main>
+<main id="contenedorBusqueda">
 
-    <h2>reservas</h2>
+    <h2 id="tituloReservas">Reservas realizadas</h2>
+    <section id="resultados" class="resultado">
 
-    <!-- LISTA DE COMPRADAS -->
-    <section>
-
-       
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>10:00 - 11:00</p>
+        <!-- 1 -->
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="avion.png" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">Directo</h5>
+                    <p class="ruta">La Paz – Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">10:00 - 11:00</p>
                 </div>
             </div>
 
-            <div>
+            <div class="precio">
                 <p>811 Bs</p>
             </div>
         </article>
 
-        
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Boa</h4>
-                    <p>14:00 - 15:00</p>
+        <!-- 2 -->
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="avion.png" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Boa</h4>
+                    <h5 class="escala">Directo</h5>
+                    <p class="ruta">La Paz – Santa Cruz</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">14:00 - 15:00</p>
                 </div>
             </div>
 
-            <div>
+            <div class="precio">
                 <p>760 Bs</p>
             </div>
         </article>
 
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>ecojet</h4>
-                    <p>09:00 - 12:00</p>
+        <!-- 3 -->
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="avion.png" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Ecojet</h4>
+                    <h5 class="escala">Directo</h5>
+                    <p class="ruta">La Paz – Cochabamba</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">09:00 - 12:00</p>
                 </div>
             </div>
 
-            <div>
+            <div class="precio">
                 <p>920 Bs</p>
             </div>
         </article>
 
-        <article>
-            <div>
-                <img src="avion.png" alt="aerolinea">
-                <div>
-                    <h4>Amaszonas</h4>
-                    <p>07:00 - 09:00</p>
+        <!-- 4 -->
+        <article class="cuadroResultado">
+            <div class="informacion">
+                <img src="avion.png" alt="aerolinea" class="aerolinea">
+                <div class="detalles">
+                    <h4 class="textoaerolinea">Amaszonas</h4>
+                    <h5 class="escala">Directo</h5>
+                    <p class="ruta">La Paz – Uyuni</p>
+                    <p class="equipaje">1 maleta facturada</p>
+                    <p class="tiempo">07:00 - 09:00</p>
                 </div>
             </div>
 
-            <div>
+            <div class="precio">
                 <p>680 Bs</p>
             </div>
         </article>
 
     </section>
 
-      <!-- PAGINACION hecho con IA revisar funcionalidad-->
-    <nav>
-        <a href="#">«</a>
-        <a href="#">‹</a>
-        <a href="#">1</a>
-        <span>2</span>
-        <span>…</span>
-        <a href="#">16</a>
-        <a href="#">17</a>
-        <a href="#">›</a>
-        <a href="#">»</a>
+    <!-- PAGINACIÓN IGUAL A LA DE BUSQUEDA -->
+    <nav id="navegacion" class="navegacion">
+        <a href="#" class="linknav">«</a>
+        <a href="#" class="linknav">‹</a>
+        <a href="#" class="linknav">1</a>
+        <span class="actual">2</span>
+        <span class="puntos">…</span>
+        <a href="#" class="linknav">16</a>
+        <a href="#" class="linknav">17</a>
+        <a href="#" class="linknav">›</a>
+        <a href="#" class="linknav">»</a>
     </nav>
 
-    <button>
-        <a href="principal.html">inicio</a>
-    </button>
+    
+    <button id="inicio" class="boton"><a href="principal.html">Inicio</a></button>
 
 </main>
 
-<!-- PIE DE PAGINA -->
-<footer>
+<!-- PIE DE PÁGINA -->
+<footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
 </footer>
 
