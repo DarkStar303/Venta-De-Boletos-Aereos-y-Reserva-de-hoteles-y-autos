@@ -50,7 +50,7 @@
         <label for="soloida" class="radio">Solo Ida</label>
         <input type="radio" name="seleccion" id="soloida">
         <label for="idavuelta" class="radio">Ida y Vuelta</label>
-        <input type="radio" name="seleccion" id="idavuelta">
+        <input type="radio" name="seleccion" id="idavuelta" checked>
         
         <label for="origen" class="FormLabel">Origen</label>
         <input type="text" id="origen" class="FormInput">
@@ -66,7 +66,8 @@
 
         <label for="nropasajeros" class="FormLabel">Nro Pasajeros</label>
         <select name="pax" id="nropasajeros" class="FormInput">
-            <option value="1">1</option>
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
@@ -79,6 +80,7 @@
 
         <label for="nro-pasajeros-menores" class="FormLabel">Nro Pasajeros menores</label>
         <select name="paxM" id="nropasajerosmenores" class="FormInput">
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -91,7 +93,7 @@
         </select>
  
         <!-- Botón como enlace -->
-     <a href="resultado_busqueda.html" class="Buscador">Buscar Vuelos</a>
+     <button onclick="buscarVuelos()" class="Buscador">Buscar Vuelos</button>
 
     </section>
  
@@ -130,13 +132,14 @@
 
         <label for="nroniños" class="FormLabel">Nro niños</label>
         <select name="niños" id="nroniños" class="FormInput">
+            <option value="0">0</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
         </select>
 
-       <a href="resultado_busqueda.html" class="Buscador">Buscar hoteles</a>
+       <button onclick="buscarHoteles()" class="Buscador">Buscar Hoteles</button>
     </section>
  
     <!-- FORMULARIO AUTOS -->
@@ -165,7 +168,7 @@
     <label for="fechaentrega" class="FormLabel">Fecha y hora de entrega</label>
     <input type="datetime-local" id="fechaentrega" class="FormInput">
 
-    <a href="resultado_busqueda.html" class="Buscador">Buscar autos</a>
+    <button onclick="buscarAutos()" class="Buscador">Buscar Autos</button>
 </section>
 
 </main>

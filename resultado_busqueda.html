@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Resultados de Vuelos</title>
     <link rel="stylesheet" href="css/estilos_busqueda.css">
 </head>
 <body>
 
- 
- <!-- encabezado con logo,inicio sesion etc -->
 <header id="encabezado">
     <div id="izquierda">
         <a href="reservas.html" id="reserva">Reservas</a>
@@ -26,94 +24,10 @@
 </header>
 
 <main id="contenedorBusqueda">
-    <!-- Todos los resultados -->
-     <!-- 1 -->
     <section id="resultados" class="resultado">
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">directo</h5>
-                    <p class="ruta">La Paz-Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">10:00 - 11:00</p>
-                </div>
-            </div>
-            <div class="precio">
-                <p>811 Bs</p>
-            </div>
-            <div class="seleccion">
-                <a href="llenar datos.html" class="boton">Seleccionar</a>
-
-            </div>
-        </article>
-        <!-- 2 -->
-
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">directo</h5>
-                    <p class="ruta">La Paz-Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">10:00 - 11:00</p>
-                </div>
-            </div>
-            <div class="precio">
-                <p>811 Bs</p>
-            </div>
-            <div class="seleccion">
-                <a href="llenar datos.html" class="boton">Seleccionar</a>
-
-            </div>
-        </article>
-        <!-- 3 -->
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">directo</h5>
-                    <p class="ruta">La Paz-Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">10:00 - 11:00</p>
-                </div>
-            </div>
-            <div class="precio">
-                <p>811 Bs</p>
-            </div>
-            <div class="seleccion">
-                <a href="llenar datos.html" class="boton">Seleccionar</a>
-
-            </div>
-        </article>
-        <!-- 4 -->
-         <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="Boa.svg" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">directo</h5>
-                    <p class="ruta">La Paz-Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">10:00 - 11:00</p>
-                </div>
-            </div>
-            <div class="precio">
-                <p>811 Bs</p>
-            </div>
-            <div class="seleccion">
-                <a href="llenar datos.html" class="boton">Seleccionar</a>
-
-            </div>
-        </article>
-        
-        
+        <!-- Los vuelos se generarán dinámicamente aquí -->
     </section>
 
-    <!-- Paginación -->
     <nav id="navegacion" class="navegacion">
         <a href="#" class="linknav">«</a>
         <a href="#" class="linknav">‹</a>
@@ -126,14 +40,88 @@
         <a href="#" class="linknav">»</a>
     </nav>
 
-    <!-- Botón de inicio -->
     <button id="inicio" class="boton"><a href="principal.html">Inicio</a></button>
 </main>
 
-<!-- Pie de página -->
 <footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
 </footer>
 
+
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const resultados = JSON.parse(localStorage.getItem("resultadosVuelos"));
+    const vuelos = resultados?.data || [];
+    const contenedor = document.getElementById("resultados");
+
+    contenedor.innerHTML = "";
+
+    if (!vuelos || vuelos.length === 0) {
+        contenedor.innerHTML = "<p>No se encontraron vuelos.</p>";
+        return;
+    }
+
+    vuelos.forEach(vuelo => {
+        // Recorremos cada itinerario (ida o vuelta)
+        vuelo.itineraries.forEach(itinerario => {
+            const segments = itinerario.segments;
+
+            const origen = segments[0].departure.iataCode;
+            const destino = segments[segments.length - 1].arrival.iataCode;
+            const salida = segments[0].departure.at.slice(11,16);
+            const llegada = segments[segments.length - 1].arrival.at.slice(11,16);
+            const aerolinea = segments[0].carrierCode;
+            const escalaTexto = segments.length > 1 
+                ? `Escalas: ${segments.slice(0, -1).map(s => s.arrival.iataCode).join(" → ")}`
+                : "Directo";
+            const precio = vuelo.price.total;
+
+            let logo = "default.svg";
+            if(aerolinea === "BO") logo = "Boa.svg";
+            else if(aerolinea === "AV") logo = "Avianca.svg";
+            else if(aerolinea === "IB") logo = "Iberia.svg";
+
+            // Crear el card
+            const card = document.createElement("article");
+            card.classList.add("cuadroResultado");
+            card.innerHTML = `
+                <div class="informacion">
+                    <img src="${logo}" alt="${aerolinea}" class="aerolinea">
+                    <div class="detalles">
+                        <h4 class="textoaerolinea">${aerolinea}</h4>
+                        <h5 class="escala">${escalaTexto}</h5>
+                        <p class="ruta">${origen} - ${destino}</p>
+                        <p class="equipaje">1 maleta facturada</p>
+                        <p class="tiempo">${salida} - ${llegada}</p>
+                    </div>
+                </div>
+                <div class="precio">
+                    <p>${precio} Bs</p>
+                </div>
+                <div class="seleccion">
+                    <button class="boton seleccionarVuelo">Seleccionar</button>
+                </div>
+            `;
+            contenedor.appendChild(card);
+
+            // Listener para seleccionar ida/vuelta
+            card.querySelector(".seleccionarVuelo").addEventListener("click", () => {
+                let vueloGuardado = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
+
+                if (!vueloGuardado.ida) {
+                    vueloGuardado.ida = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
+                    alert("Vuelo de ida seleccionado. Ahora selecciona el vuelo de vuelta.");
+                } else if (!vueloGuardado.vuelta) {
+                    vueloGuardado.vuelta = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
+                    alert("Vuelo de vuelta seleccionado. Redirigiendo a llenar datos...");
+                    window.location.href = "llenar datos.html";
+                }
+
+                localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloGuardado));
+            });
+        });
+    });
+});
+</script>

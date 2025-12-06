@@ -99,5 +99,45 @@
     <footer id="footer">
         Todos los derechos reservados DreamFlying © 2025
     </footer>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const vuelo = JSON.parse(localStorage.getItem("vueloSeleccionado"));
+    if (!vuelo) return;
+
+    // Puedes mostrar los datos en un div o dentro del formulario
+    const infoVuelo = document.createElement("div");
+    infoVuelo.id = "infoVuelo";
+    infoVuelo.innerHTML = `
+        <h3>Vuelo seleccionado</h3>
+        <p>Aerolínea: ${vuelo.aerolinea}</p>
+        <p>Ruta: ${vuelo.origen} - ${vuelo.destino}</p>
+        <p>Salida: ${vuelo.salida} - Llegada: ${vuelo.llegada}</p>
+        <p>Precio: ${vuelo.precio} Bs</p>
+        <p>${vuelo.escala}</p>
+    `;
+    const form = document.getElementById("formDatos");
+    form.prepend(infoVuelo);
+});
+</script>
 </body>
 </html>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const vuelo = JSON.parse(localStorage.getItem("vueloSeleccionado"));
+    if (!vuelo) return;
+
+    // Puedes mostrar los datos en un div o dentro del formulario
+    const infoVuelo = document.createElement("div");
+    infoVuelo.id = "infoVuelo";
+    infoVuelo.innerHTML = `
+        <h3>Vuelo seleccionado</h3>
+        <p>Aerolínea: ${vuelo.aerolinea}</p>
+        <p>Ruta: ${vuelo.origen} - ${vuelo.destino}</p>
+        <p>Salida: ${vuelo.salida} - Llegada: ${vuelo.llegada}</p>
+        <p>Precio: ${vuelo.precio} Bs</p>
+        <p>${vuelo.escala}</p>
+    `;
+    const form = document.getElementById("formDatos");
+    form.prepend(infoVuelo);
+});
+</script>
