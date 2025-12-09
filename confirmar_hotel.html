@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Reserva de Hotel - DreamFlying</title>
+    <link rel="stylesheet" href="css/estilos_reservas.css">
+</head>
+<body>
+
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
+    </div>
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+    <div id="derecha">
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
+    </div>
+</header>
+
+<main id="contenedorBusqueda">
+    <h2 id="tituloConfirmacion">Confirmar Reserva de Hotel</h2>
+    
+    <section id="detalleHotel" class="cuadroResultado">
+        <p>Cargando detalles del hotel...</p>
+    </section>
+    
+    <section id="formularioPago" class="cuadroResultado">
+        <h3>Información del Contacto y Pago</h3>
+        <form id="formReservaHotel">
+            
+            <label for="nombre">Nombre Completo del Titular:</label>
+            <input type="text" id="nombre" required placeholder="Ej: Juan Pérez"><br><br>
+
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" required placeholder="ejemplo@dominio.com"><br><br>
+            
+            <label for="tarjeta">Número de Tarjeta (Simulado):</label>
+            <input type="text" id="tarjeta" required pattern="\d{16}" title="Debe ser un número de 16 dígitos" placeholder="0000 0000 0000 0000"><br><br>
+
+            <button type="submit" id="botonConfirmar" class="boton">Confirmar Reserva y Pagar</button>
+        </form>
+    </section>
+</main>
+
+<footer id="PiePagina">
+    Todos los derechos reservados DreamFlying © 2025
+</footer>
+
+<script>
+    let hotelSeleccionado = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarDetalleHotel();
+        manejarSesion(); 
+        document.getElementById('formReservaHotel').addEventListener('submit', confirmarReserva);
+    });
+
+    /**
+     * Muestra el estado de la sesión (Entrar o Email + Cerrar Sesión).
+     */
+    function manejarSesion() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000';
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear(); 
+                localStorage.removeItem('historialReservas'); 
+                localStorage.removeItem('historialReservasHoteles'); 
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+            estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    }
+
+
+    /**
+     * Carga y muestra los detalles del hotel seleccionado desde localStorage.
+     */
+    function cargarDetalleHotel() {
+        const hotelJSON = localStorage.getItem('hotelSeleccionado');
+        const detalleHotelDiv = document.getElementById('detalleHotel');
+
+        if (!hotelJSON) {
+            detalleHotelDiv.innerHTML = '<p>Error: No se encontró la selección del hotel. Por favor, vuelva a buscar.</p>';
+            document.getElementById('formularioPago').style.display = 'none';
+            return;
+        }
+
+        hotelSeleccionado = JSON.parse(hotelJSON);
+        // Generar las estrellas simuladas
+        const estrellas = '⭐️'.repeat(hotelSeleccionado.clase || 4);
+        
+        detalleHotelDiv.innerHTML = `
+            <h3>Hotel Seleccionado:</h3>
+            <div class="informacion-hotel">
+                <div class="detalles-hotel">
+                    <h4 class="textoaerolinea">${hotelSeleccionado.nombre} (${estrellas})</h4>
+                    <p>Ubicación: <strong>${hotelSeleccionado.ubicacion}</strong></p>
+                    <p>Check-in: <strong>${hotelSeleccionado.checkIn}</strong></p>
+                    <p>Check-out: <strong>${hotelSeleccionado.checkOut}</strong></p>
+                    <p>Noches de estancia: <strong>${hotelSeleccionado.noches}</strong></p>
+                    <p>Huéspedes: <strong>${hotelSeleccionado.huespedes} adultos</strong></p>
+                </div>
+                </div>
+            <hr>
+            <div class="precio" style="text-align: right;">
+                <p style="font-weight: bold; font-size: 1.2em;">TOTAL A PAGAR: ${hotelSeleccionado.totalAlojamiento} ${hotelSeleccionado.moneda}</p>
+            </div>
+        `;
+    }
+
+    /**
+     * Procesa la confirmación de la reserva, la guarda en localStorage y redirige al historial.
+     */
+    function confirmarReserva(e) {
+        e.preventDefault();
+
+        if (!hotelSeleccionado) {
+            alert('No hay datos de hotel para confirmar. Por favor, seleccione un hotel primero.');
+            return;
+        }
+
+        const nombre = document.getElementById('nombre').value;
+        const email = document.getElementById('email').value;
+
+        // 1. Crear el objeto de la reserva final
+        const nuevaReserva = {
+            idReserva: Date.now(), 
+            tipo: 'hotel',
+            fechaCompra: new Date().toLocaleDateString('es-ES'),
+            estado: 'CONFIRMADO',
+            costoPagado: hotelSeleccionado.totalAlojamiento, 
+            nombreComprador: nombre,
+            correoContacto: email,
+            hotelData: hotelSeleccionado 
+        };
+
+        // 2. Cargar el historial existente (Clave: 'historialReservasHoteles')
+        let historial = JSON.parse(localStorage.getItem('historialReservasHoteles') || '[]');
+        
+        // 3. Agregar la nueva reserva y guardar
+        historial.push(nuevaReserva);
+        localStorage.setItem('historialReservasHoteles', JSON.stringify(historial));
+
+        // 4. Limpiar la selección temporal del hotel
+        localStorage.removeItem('hotelSeleccionado'); 
+
+        alert(`¡Reserva de ${hotelSeleccionado.nombre} confirmada con éxito! ID: DFH-${String(nuevaReserva.idReserva).slice(-6)}`);
+
+        // 5. Redirigir al historial de reservas de hoteles
+        window.location.href = 'reservas_hoteles.html';
+    }
+</script>
+</body>
+</html>

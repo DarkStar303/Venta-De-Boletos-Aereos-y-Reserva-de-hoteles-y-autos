@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Reservas de Hoteles - DreamFlying</title>
+    <link rel="stylesheet" href="css/estilos_reservas.css">
+</head>
+<body>
+
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
+    </div>
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+    <div id="derecha">
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
+    </div>
+</header>
+
+<main id="contenedorBusqueda">
+    <h2 id="tituloReservas">Tus Reservas de Hoteles</h2>
+    
+    <section id="listaReservas" class="resultado">
+        <p id="mensajeVacio" style="text-align: center; color: #777; font-size: 1.2em; padding: 20px; display: none;">
+            Aún no tienes hoteles reservados. ¡Es hora de planificar tu próxima escapada!
+        </p>
+    </section>
+
+    <button id="inicio" class="boton"><a href="principal.html" style="text-decoration: none; color: white;">Volver al Inicio</a></button>
+
+</main>
+
+<footer id="PiePagina">
+    Todos los derechos reservados DreamFlying © 2025
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        verificarEstadoSesion();
+        cargarReservasHoteles();
+    });
+
+    /**
+     * Muestra el nombre de usuario o el enlace "Entrar" y maneja el cierre de sesión.
+     */
+    function verificarEstadoSesion() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000'; 
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear();
+                // Opcional: limpiar historial de vuelos si fuera necesario, pero la clave 'historialReservas' se limpia en la página de historial de vuelos.
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+             estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    }
+
+
+    /**
+     * Carga y renderiza el historial de reservas de hoteles guardado en localStorage
+     * usando la clave 'historialReservasHoteles'.
+     */
+    function cargarReservasHoteles() {
+        const historialHotelesJSON = localStorage.getItem('historialReservasHoteles');
+        const listaReservas = document.getElementById('listaReservas');
+        const mensajeVacio = document.getElementById('mensajeVacio');
+        
+        listaReservas.innerHTML = ''; 
+
+        if (!historialHotelesJSON) {
+            mensajeVacio.style.display = 'block';
+            return;
+        }
+
+        const historialHoteles = JSON.parse(historialHotelesJSON);
+
+        if (historialHoteles.length === 0) {
+            mensajeVacio.style.display = 'block';
+            return;
+        }
+
+        mensajeVacio.style.display = 'none';
+
+        // Ordenar por ID de reserva (fecha de compra más reciente)
+        historialHoteles.sort((a, b) => b.idReserva - a.idReserva); 
+
+        historialHoteles.forEach((reserva) => {
+            const hotel = reserva.hotelData || {}; 
+            const estrellas = '⭐️'.repeat(hotel.clase || 4);
+            const estadoColor = reserva.estado === 'CONFIRMADO' ? 'green' : '#CC0000';
+            const idReservaCorto = String(reserva.idReserva).slice(-6); // Últimos 6 dígitos
+
+            const cardReserva = document.createElement('article');
+            cardReserva.classList.add('cuadroResultado'); 
+
+            cardReserva.innerHTML = `
+                <div class="informacion">
+                    <img src="img/hotel_icon.png" alt="Icono de Hotel" class="aerolinea"> 
+                    <div class="hotel-segmento">
+                        <h4 class="textoaerolinea">Hotel: ${hotel.nombre || 'Hotel Desconocido'} (${estrellas})</h4>
+                        <p class="ruta">Ubicación: <strong>${hotel.ubicacion || 'N/A'}</strong></p>
+                        <p class="tiempo">Fechas: ${hotel.checkIn || '--'} al ${hotel.checkOut || '--'}</p>
+                        <p class="tiempo">Noches: ${hotel.noches || 0} | Huéspedes: ${hotel.huespedes || 0}</p>
+                    </div>
+                </div>
+
+                <div class="resumen-pago">
+                    <p class="detalle-adicional">
+                        Comprador: <strong>${reserva.nombreComprador || 'N/A'}</strong>
+                    </p>
+                    <p class="detalle-adicional">
+                        ID Reserva: <strong>DFH-${idReservaCorto}</strong>
+                    </p>
+                    <p class="detalle-adicional">
+                        Fecha de Compra: <strong>${reserva.fechaCompra || 'N/A'}</strong>
+                    </p>
+                    <div class="precio">
+                        <p style="font-weight: bold; font-size: 1.1em;">TOTAL PAGADO: ${reserva.costoPagado || '0.00'} ${hotel.moneda || 'Bs'}</p>
+                        <p style="font-size: 0.9em; color: ${estadoColor}; font-weight: bold;">Estado: ${reserva.estado.toUpperCase() || 'CONFIRMADO'}</p>
+                    </div>
+                </div>
+            `;
+            
+            listaReservas.appendChild(cardReserva);
+        });
+    }
+</script>
+</body>
+</html>

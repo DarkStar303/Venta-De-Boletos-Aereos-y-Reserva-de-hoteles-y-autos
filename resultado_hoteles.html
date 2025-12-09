@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Búsqueda de Hoteles - DreamFlying</title>
+    <link rel="stylesheet" href="css/estilos_reservas.css"> 
+</head>
+<body>
+
+<header id="encabezado">
+    <div id="izquierda">
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
+    </div>
+    <div id="centro">
+        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+    </div>
+    <div id="derecha">
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
+    </div>
+</header>
+
+<main id="contenedorBusqueda">
+    <h2 id="tituloResultados">Hoteles Encontrados en [Ciudad de Búsqueda]</h2>
+    
+    <section id="listaResultados" class="resultado">
+    </section>
+
+    <button id="inicio" class="boton"><a href="principal.html" style="text-decoration: none; color: white;">Nueva Búsqueda</a></button>
+</main>
+
+<footer id="PiePagina">
+    Todos los derechos reservados DreamFlying © 2025
+</footer>
+
+<script>
+    // Estructura de datos simulada para un hotel
+    const hotelesSimulados = [
+        {
+            id: 'H001',
+            nombre: 'Hotel Oasis Central',
+            ubicacion: 'Avenida Principal 123, Madrid',
+            clase: 4,
+            precioNoche: 120.00,
+            moneda: 'Bs',
+            checkIn: '2025-12-20',
+            checkOut: '2025-12-25',
+            noches: 5,
+            huespedes: 2,
+            imagen: 'hotel1.jpg'
+        },
+        {
+            id: 'H002',
+            nombre: 'Apartamentos Vía Estación',
+            ubicacion: 'Callejón Sur 45, Madrid',
+            clase: 3,
+            precioNoche: 75.50,
+            moneda: 'Bs',
+            checkIn: '2025-12-20',
+            checkOut: '2025-12-25',
+            noches: 5,
+            huespedes: 2,
+            imagen: 'hotel2.jpg'
+        }
+    ];
+
+    /**
+     * Carga y renderiza los resultados de hoteles simulados en la lista.
+     */
+    function cargarHotelesSimulados() {
+        const lista = document.getElementById('listaResultados');
+        lista.innerHTML = ''; 
+
+        if (hotelesSimulados.length === 0) {
+            lista.innerHTML = '<p style="text-align: center;">No se encontraron hoteles con los criterios seleccionados.</p>';
+            return;
+        }
+
+        // Simulación para actualizar el título
+        const titulo = document.getElementById('tituloResultados');
+        titulo.textContent = 'Hoteles Encontrados en Madrid, España (Simulación)';
+
+        hotelesSimulados.forEach(hotel => {
+            const total = (hotel.precioNoche * hotel.noches).toFixed(2);
+            const estrellas = '⭐️'.repeat(hotel.clase); 
+            
+            const card = document.createElement('article');
+            card.classList.add('cuadroResultado'); 
+            
+            card.innerHTML = `
+                <div class="informacion-hotel">
+                    <img src="img/${hotel.imagen}" alt="${hotel.nombre}" class="imagen-hotel">
+                    <div class="detalles-hotel">
+                        <h4 class="textoaerolinea">${hotel.nombre} (${estrellas})</h4>
+                        <p class="ruta">Ubicación: <strong>${hotel.ubicacion}</strong></p>
+                        <p class="tiempo">Fechas: ${hotel.checkIn} - ${hotel.checkOut} (${hotel.noches} noches)</p>
+                        <p class="tiempo">Huéspedes: ${hotel.huespedes}</p>
+                    </div>
+                </div>
+
+                <div class="resumen-precio">
+                    <div class="precio">
+                        <p style="font-weight: bold; font-size: 1.1em;">Total Estancia:</p>
+                        <p style="font-size: 1.5em; color: #1d4e89; font-weight: bold;">${total} ${hotel.moneda}</p>
+                        <p style="font-size: 0.8em; color: #777;">(${hotel.precioNoche} ${hotel.moneda} por noche)</p>
+                    </div>
+                    <button class="boton-seleccionar boton" onclick="seleccionarHotel('${hotel.id}')">Seleccionar</button>
+                </div>
+            `;
+            lista.appendChild(card);
+        });
+    }
+
+    /**
+     * Guarda el hotel seleccionado y redirige. (Global para ser llamado por onclick)
+     */
+    function seleccionarHotel(hotelId) {
+        const hotelSeleccionado = hotelesSimulados.find(h => h.id === hotelId);
+        
+        if (hotelSeleccionado) {
+            // Calcular el total final antes de guardar
+            hotelSeleccionado.totalAlojamiento = (hotelSeleccionado.precioNoche * hotelSeleccionado.noches).toFixed(2);
+
+            // Guardar el hotel seleccionado en localStorage
+            localStorage.setItem('hotelSeleccionado', JSON.stringify(hotelSeleccionado));
+            
+            // Redirigir a la página de confirmación
+            alert(`Hotel seleccionado: ${hotelSeleccionado.nombre}. Redirigiendo a confirmación.`);
+            window.location.href = 'confirmar_hotel.html';
+        } else {
+            alert('Error al seleccionar el hotel.');
+        }
+    }
+
+    /**
+     * Muestra el estado de la sesión (Entrar o Email + Cerrar Sesión).
+     */
+    function manejarSesion() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000';
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear(); 
+                localStorage.removeItem('historialReservas'); 
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+            estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarHotelesSimulados();
+        manejarSesion();
+    });
+</script>
+</body>
+</html>
