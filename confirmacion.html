@@ -2,52 +2,290 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Confirmar Datos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmar Datos y Pagar</title>
     <link rel="stylesheet" href="CSS/estilos_confirmacion.css">
 </head>
 <body>
 
- <!-- encabezado con logo,inicio sesion etc -->
 <header id="encabezado">
     <div id="izquierda">
-        <a href="reservas.html" id="reserva">Reservas</a>
-        <a href="#" id="condiciones">Condiciones</a>
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
     </div>
-
     <div id="centro">
         <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
     </div>
-
     <div id="derecha">
-        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
     </div>
 </header>
-    <h2 id="titulo">Confirmar</h2>
+<h2 id="titulo">Confirmar Compra y Pago</h2>
 
-    <!-- Confirmación de datos -->
-    <div id="confirmacion" class="contenedorconfirmacion">
+<div id="info-pago" class="contenedorconfirmacion">
+    <p class="dato"><strong>SALDO DISPONIBLE:</strong> <span id="saldo_disponible">---</span></p>
+    <p class="dato"><strong>COSTO TOTAL DEL VUELO:</strong> <span id="costo_vuelo">---</span></p>
+    <p id="mensaje-saldo" style="font-weight: bold; color: green;"></p>
+</div>
 
-        <p class="dato"><strong>NOMBRE:</strong> <span id="confirmar_nombre"></span></p>
-        <p class="dato"><strong>APELLIDO:</strong> <span id="confirmar_apellido"></span></p>
-        <p class="dato"><strong>DOCUMENTO:</strong> <span id="confirmar_documento"></span></p>
-        <p class="dato"><strong>NUMERO DOCUMENTO:</strong> <span id="confirmar_numero_documento"></span></p>
-        <p class="dato"><strong>TELEFONO:</strong> <span id="confirmar_telefono"></span></p>
-        <p class="dato"><strong>CORREO ELECTRONICO:</strong> <span id="confirmar_correo"></span></p>
-        <p class="dato"><strong>RAZON SOCIAL:</strong> <span id="confirmar_razon_social"></span></p>
-        <p class="dato"><strong>NIT/CI:</strong> <span id="confirmar_nit_ci"></span></p>
+<hr>
 
-        <!-- Botones -->
-        <div class="acciones">
-            <button id="pagar" class="boton" type="button" onclick="pagar()">PAGAR</button>
-            <button id="cancelar" class="boton" type="button" onclick="cancelar()">CANCELAR</button>
-        </div>
+<h3>Datos de los Pasajeros</h3>
+<div id="pasajerosConfirmados" class="contenedorconfirmacion">
+</div>
 
-    </div>
+<hr>
 
-    <!-- Pie de página -->
-    <footer id="PiePagina">
+<h3>Datos del Comprador y Facturación</h3>
+<div id="contactoConfirmado" class="contenedorconfirmacion">
+    <p class="dato"><strong>TELÉFONO:</strong> <span id="confirmar_telefono"></span></p>
+    <p class="dato"><strong>CORREO ELECTRÓNICO:</strong> <span id="confirmar_correo"></span></p>
+    <p class="dato"><strong>RAZÓN SOCIAL:</strong> <span id="confirmar_razon_social"></span></p>
+    <p class="dato"><strong>NIT/CI:</strong> <span id="confirmar_nit_ci"></span></p>
+    <p class="dato"><strong>CONDICIONES DE USO:</strong> <span id="confirmar_condiciones_uso"></span></p>
+    <p class="dato"><strong>TÉRMINOS Y CONDICIONES:</strong> <span id="confirmar_terminos_condiciones"></span></p>
+</div>
+
+<div class="acciones">
+    <button id="pagar" class="boton" type="button" onclick="realizarPago()">PAGAR</button>
+    <button id="cancelar" class="boton" type="button" onclick="cancelar()">CANCELAR</button>
+</div>
+
+<footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
 </footer>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        cargarDatosConfirmacion();
+        cargarSaldoYCosto();
+        verificarEstadoSesion();
+    });
+
+    /**
+     * Muestra el estado de la sesión (Entrar o Email + Cerrar Sesión).
+     */
+    function verificarEstadoSesion() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000';
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear(); 
+                localStorage.removeItem('historialReservas'); 
+                localStorage.removeItem('historialReservasHoteles'); 
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+             estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    }
+
+    /**
+     * FUNCIÓN CENTRAL PARA CARGAR DATOS DE CONFIRMACIÓN
+     * Carga y muestra los datos de pasajeros y contacto guardados en sessionStorage.
+     */
+    function cargarDatosConfirmacion() {
+        const pasajerosDataJSON = sessionStorage.getItem('pasajerosData');
+        const contactoDataJSON = sessionStorage.getItem('contactoData');
+
+        if (!pasajerosDataJSON || !contactoDataJSON) {
+            // Si faltan datos, redirigir al paso anterior
+            console.error('Datos de pasajeros o contacto no encontrados.');
+            alert('Faltan datos personales. Serás redirigido para completarlos.');
+            window.location.href = 'llenar_datos.html'; 
+            return;
+        }
+
+        const datosPasajeros = JSON.parse(pasajerosDataJSON);
+        const datosContacto = JSON.parse(contactoDataJSON);
+        const pasajerosContainer = document.getElementById('pasajerosConfirmados');
+        
+        // 1. Mostrar Datos de Contacto/Comprador
+        document.getElementById('confirmar_telefono').textContent = datosContacto.telefono;
+        document.getElementById('confirmar_correo').textContent = datosContacto.correo;
+        document.getElementById('confirmar_razon_social').textContent = datosContacto.razon_social || 'N/A';
+        document.getElementById('confirmar_nit_ci').textContent = datosContacto.nit_ci || 'N/A';
+        document.getElementById('confirmar_condiciones_uso').textContent = datosContacto.condiciones_uso;
+        document.getElementById('confirmar_terminos_condiciones').textContent = datosContacto.terminos_condiciones;
+
+
+        // 2. Mostrar Datos de TODOS los Pasajeros
+        pasajerosContainer.innerHTML = ''; // Limpiar contenedor
+        datosPasajeros.forEach((pasajero, index) => {
+            const pasajeroDiv = document.createElement('div');
+            pasajeroDiv.className = 'confirmacion-pasajero';
+            pasajeroDiv.innerHTML = `
+                <h4>Pasajero ${index + 1} - ${pasajero.tipo}</h4>
+                <p class="dato"><strong>NOMBRE COMPLETO:</strong> ${pasajero.nombre} ${pasajero.apellidoP} ${pasajero.apellidoM || ''}</p>
+                <p class="dato"><strong>DOCUMENTO:</strong> ${pasajero.tipo_documento.toUpperCase()}</p>
+                <p class="dato"><strong>NÚMERO DOC.:</strong> ${pasajero.numero_documento}</p>
+                ${index < datosPasajeros.length - 1 ? '<hr style="border-top: 1px dashed #ccc;">' : ''}
+            `;
+            pasajerosContainer.appendChild(pasajeroDiv);
+        });
+    }
+
+    /**
+     * FUNCIÓN PARA CARGAR EL SALDO Y EL COSTO TOTAL DEL BOLETO
+     * Verifica la disponibilidad de fondos y habilita/deshabilita el botón de pago.
+     */
+    function cargarSaldoYCosto() {
+        const saldo = sessionStorage.getItem('saldoUsuario');
+        const costoVueloUnitarioStr = sessionStorage.getItem('costoBoleto'); 
+        
+        const numAdultos = parseInt(sessionStorage.getItem('adultos') || 1); 
+        const numNinos = parseInt(sessionStorage.getItem('ninos') || 0);
+        const totalPasajeros = numAdultos + numNinos;
+        
+        const saldoDisponibleSpan = document.getElementById('saldo_disponible');
+        const costoVueloSpan = document.getElementById('costo_vuelo'); 
+        const mensajeSaldo = document.getElementById('mensaje-saldo');
+        const botonPagar = document.getElementById('pagar');
+
+        // 1. Determinar Saldo Actual
+        let saldoActual = saldo ? parseFloat(saldo) : 0;
+        saldoDisponibleSpan.textContent = `${saldoActual.toFixed(2)} Bs`;
+
+        // 2. Calcular Costo Total por Pasajeros
+        let costoTotal = 0; 
+        let costoUnitario = 0;
+
+        if (costoVueloUnitarioStr) {
+            costoUnitario = parseFloat(costoVueloUnitarioStr);
+            costoTotal = costoUnitario * totalPasajeros;
+            
+            costoVueloSpan.textContent = `${costoTotal.toFixed(2)} Bs (${totalPasajeros} Pax)`;
+        } else {
+            costoVueloSpan.textContent = 'Precio no disponible';
+            botonPagar.disabled = true;
+            mensajeSaldo.textContent = 'Error: Precio del vuelo no encontrado.';
+            mensajeSaldo.style.color = 'red';
+            return;
+        }
+
+        // 3. Verificar si hay suficiente saldo
+        if (saldoActual >= costoTotal) {
+            mensajeSaldo.textContent = 'El saldo es suficiente para realizar la compra.';
+            mensajeSaldo.style.color = 'green';
+            botonPagar.disabled = false;
+        } else {
+            mensajeSaldo.textContent = '¡Saldo Insuficiente para este vuelo!';
+            mensajeSaldo.style.color = 'red';
+            botonPagar.disabled = true;
+        }
+    }
+
+    /**
+     * FUNCIÓN PARA REALIZAR EL PAGO Y GUARDAR LA RESERVA
+     * Ejecuta la compra, descuenta el saldo, guarda la reserva en localStorage y redirige.
+     */
+    function realizarPago() {
+        let saldoActual = parseFloat(sessionStorage.getItem('saldoUsuario'));
+        const costoVueloUnitarioStr = sessionStorage.getItem('costoBoleto');
+        
+        const numAdultos = parseInt(sessionStorage.getItem('adultos') || 1); 
+        const numNinos = parseInt(sessionStorage.getItem('ninos') || 0);
+        const totalPasajeros = numAdultos + numNinos;
+
+        if (!costoVueloUnitarioStr || isNaN(parseFloat(costoVueloUnitarioStr)) || isNaN(saldoActual)) {
+            alert('Error: Datos de vuelo o saldo incompletos.');
+            return;
+        }
+        
+        const costoUnitario = parseFloat(costoVueloUnitarioStr);
+        const costoTotal = costoUnitario * totalPasajeros; 
+        
+        if (saldoActual >= costoTotal) {
+            const nuevoSaldo = saldoActual - costoTotal;
+            
+            // Descontar y actualizar el saldo
+            sessionStorage.setItem('saldoUsuario', nuevoSaldo.toFixed(2));
+
+            // =======================================================
+            // PASO CLAVE: GUARDAR LA RESERVA
+            // =======================================================
+            
+            const datosPasajeros = JSON.parse(sessionStorage.getItem('pasajerosData'));
+            const datosContacto = JSON.parse(sessionStorage.getItem('contactoData'));
+            const vueloSeleccionado = JSON.parse(localStorage.getItem('vueloSeleccionado'));
+            
+            const primeraPersona = datosPasajeros && datosPasajeros.length > 0 ? 
+                                   `${datosPasajeros[0].nombre} ${datosPasajeros[0].apellidoP}` : 
+                                   'Pasajero Desconocido';
+            
+            const nuevaReserva = {
+                id: Date.now(),
+                fechaCompra: new Date().toLocaleDateString('es-ES'),
+                costoPagado: costoTotal.toFixed(2), 
+                datosVuelo: vueloSeleccionado,
+                datosPasajeros: datosPasajeros, 
+                datosContacto: datosContacto, 
+                nombrePasajeroPrincipal: primeraPersona,
+                correoContacto: datosContacto.correo,
+                estado: 'Confirmada'
+            };
+
+            const historialReservasJSON = localStorage.getItem('historialReservas');
+            const historialReservas = historialReservasJSON ? JSON.parse(historialReservasJSON) : [];
+
+            historialReservas.push(nuevaReserva);
+            localStorage.setItem('historialReservas', JSON.stringify(historialReservas));
+
+            // =======================================================
+
+            alert(` ¡Pago exitoso! Se descontaron ${costoTotal.toFixed(2)} Bs por ${totalPasajeros} pasajeros.\nTu saldo restante es: ${nuevoSaldo.toFixed(2)} Bs.`);
+            
+            // Limpiar datos de paso para evitar repetición
+            sessionStorage.removeItem('pasajerosData');
+            sessionStorage.removeItem('contactoData');
+            sessionStorage.removeItem('adultos');
+            sessionStorage.removeItem('ninos');
+            
+            // Redirigir al historial de reservas de vuelos
+            window.location.href = 'reservas.html'; 
+            
+        } else {
+            alert(`Fondo insuficiente. Costo total: ${costoTotal.toFixed(2)} Bs. Saldo actual: ${saldoActual.toFixed(2)} Bs.`);
+        }
+    }
+
+    /**
+     * Función para el botón Cancelar
+     * Cancela la compra, limpia datos temporales y redirige a la búsqueda.
+     */
+    function cancelar() {
+        if (confirm("¿Estás seguro de que quieres cancelar la compra y volver a la búsqueda? Se perderán los datos ingresados.")) {
+            // Limpiar datos intermedios si cancela
+            sessionStorage.removeItem('pasajerosData');
+            sessionStorage.removeItem('contactoData');
+            sessionStorage.removeItem('adultos');
+            sessionStorage.removeItem('ninos');
+            window.location.href = 'resultado_busqueda.html';
+        }
+    }
+</script>
 </body>
 </html>

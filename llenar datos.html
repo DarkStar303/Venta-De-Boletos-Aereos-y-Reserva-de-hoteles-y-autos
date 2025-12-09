@@ -2,142 +2,243 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos Personales</title>
     <link rel="stylesheet" href="CSS/estilos_datos.css">
 </head>
 <body>
- <!-- encabezado con logo,inicio sesion etc -->
 <header id="encabezado">
     <div id="izquierda">
-        <a href="reservas.html" id="reserva">Reservas</a>
-        <a href="#" id="condiciones">Condiciones</a>
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
     </div>
-
     <div id="centro">
         <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
     </div>
-
     <div id="derecha">
-        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
     </div>
 </header>
-    <!-- Registro de datos personales -->
-    <section id="seleccionDatos">
-        <h2 class="titulo">Datos Personales</h2>
-        <form id="formDatos">
-            <div class="datos">
-                <label for="nombre" class="formLabel">Nombres</label>
-                <input type="text" id="nombre" name="nombre" class="FormInput"/>
-            </div>
 
-            <div class="datos">
-                <label for="apellidoP" class="formLabel">Apellido Paterno</label>
-                <input type="text" id="apellidoP" name="apellidoP" class="FormInput"/>
-            </div>
+<section id="seleccionDatos">
+    <h2 class="titulo">Datos Personales</h2>
+    <div id="pasajerosContainer">
+    </div>
+</section>
 
-            <div class="datos">
-                <label for="apellidoM" class="formLabel">Apellido Materno</label>
-                <input type="text" id="apellidoM" name="apellidoM" class="FormInput"/>
-            </div>
+<template id="pasajeroTemplate">
+    <div class="pasajero-form-group">
+        <h3 class="pasajero-titulo">Datos del Pasajero #[NUMERO] - [TIPO]</h3>
+        <div class="datos">
+            <label for="nombre-[NUMERO]" class="formLabel">Nombres</label>
+            <input type="text" id="nombre-[NUMERO]" name="nombre-[NUMERO]" class="FormInput" required/>
+        </div>
 
-            <div class="datos">
-                <label for="tipo_documento" class="formLabel">Documento</label>
-                <select id="tipo_documento" name="tipo_documento" class="formselec">
-                    <option value="">Seleccionar opción</option>
-                    <option value="dni">DNI</option>
-                    <option value="pasaporte">Pasaporte</option>
-                </select>
-            </div>
+        <div class="datos">
+            <label for="apellidoP-[NUMERO]" class="formLabel">Apellido Paterno</label>
+            <input type="text" id="apellidoP-[NUMERO]" name="apellidoP-[NUMERO]" class="FormInput" required/>
+        </div>
 
-            <div class="datos">
-                <label for="numero_documento" class="formLabel">Número Documento/Pasaporte</label>
-                <input type="text" id="numero_documento" name="numero_documento" class="FormInput"/>
-            </div>
+        <div class="datos">
+            <label for="apellidoM-[NUMERO]" class="formLabel">Apellido Materno</label>
+            <input type="text" id="apellidoM-[NUMERO]" name="apellidoM-[NUMERO]" class="FormInput"/>
+        </div>
 
-            <div class="datos">
-                <label for="telefono" class="formLabel">Teléfono</label>
-                <input type="text" id="telefono" name="telefono" class="FormInput"/>
-            </div>
+        <div class="datos">
+            <label for="tipo_documento-[NUMERO]" class="formLabel">Documento</label>
+            <select id="tipo_documento-[NUMERO]" name="tipo_documento-[NUMERO]" class="formselec" required>
+                <option value="">Seleccionar opción</option>
+                <option value="dni">DNI</option>
+                <option value="pasaporte">Pasaporte</option>
+            </select>
+        </div>
 
-            <div class="datos">
-                <label for="correo" class="formLabel">Correo Electrónico</label>
-                <input type="email" id="correo" name="correo" class="FormInput"/>
-            </div>
+        <div class="datos">
+            <label for="numero_documento-[NUMERO]" class="formLabel">Número Documento/Pasaporte</label>
+            <input type="text" id="numero_documento-[NUMERO]" name="numero_documento-[NUMERO]" class="FormInput" required/>
+        </div>
 
-            <div class="datos">
-                <label for="razon_social" class="formLabel">Razón Social</label>
-                <input type="text" id="razon_social" name="razon_social" class="FormInput"/>
-            </div>
+    </div>
+</template>
 
-            <div class="datos">
-                <label for="nit_ci" class="formLabel">NIT/CI</label>
-                <input type="text" id="nit_ci" name="nit_ci" class="FormInput"/>
-            </div>
+<section id="contactoFacturacion">
+    <h3 class="pasajero-titulo">Información de Contacto y Facturación (Comprador)</h3>
+    <form id="formDatosUnicos">
+        <div class="datos">
+            <label for="telefono" class="formLabel">Teléfono</label>
+            <input type="text" id="telefono" name="telefono" class="FormInput" required/>
+        </div>
 
-            <div class="datos">
-                <label for="condiciones_uso" class="checkboxLabel">
-                    <input type="checkbox" id="condiciones_uso" name="condiciones_uso" class="formcheckbox">
-                    Condiciones de uso
-                </label>
-            </div>
+        <div class="datos">
+            <label for="correo" class="formLabel">Correo Electrónico</label>
+            <input type="email" id="correo" name="correo" class="FormInput" required/>
+        </div>
 
-            <div class="datos">
-                <label for="terminos_condiciones" class="checkboxLabel">
-                    <input type="checkbox" id="terminos_condiciones" name="terminos_condiciones" class="formcheckbox">
-                    Términos y condiciones
-                </label>
-            </div>
+        <div class="datos">
+            <label for="razon_social" class="formLabel">Razón Social (Opcional)</label>
+            <input type="text" id="razon_social" name="razon_social" class="FormInput"/>
+        </div>
 
-            <div class="form-actions">
-                <button type="submit" class="btn" id="continuar"><a href="confirmacion.html" class="btn-link">continuar</a></button>
-                <button type="button" class="btn" id="cancelar"><a href="resultado_busqueda.html" class="btn-link">Cancelar</a></button>
-            </div>
-        </form>
-    </section>
+        <div class="datos">
+            <label for="nit_ci" class="formLabel">NIT/CI (Opcional)</label>
+            <input type="text" id="nit_ci" name="nit_ci" class="FormInput"/>
+        </div>
 
-    <!-- Pie de página -->
-    <footer id="footer">
-        Todos los derechos reservados DreamFlying © 2025
-    </footer>
-    <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const vuelo = JSON.parse(localStorage.getItem("vueloSeleccionado"));
-    if (!vuelo) return;
+        <div class="datos">
+            <label for="condiciones_uso" class="checkboxLabel">
+                <input type="checkbox" id="condiciones_uso" name="condiciones_uso" class="formcheckbox" required>
+                Condiciones de uso
+            </label>
+        </div>
 
-    // Puedes mostrar los datos en un div o dentro del formulario
-    const infoVuelo = document.createElement("div");
-    infoVuelo.id = "infoVuelo";
-    infoVuelo.innerHTML = `
-        <h3>Vuelo seleccionado</h3>
-        <p>Aerolínea: ${vuelo.aerolinea}</p>
-        <p>Ruta: ${vuelo.origen} - ${vuelo.destino}</p>
-        <p>Salida: ${vuelo.salida} - Llegada: ${vuelo.llegada}</p>
-        <p>Precio: ${vuelo.precio} Bs</p>
-        <p>${vuelo.escala}</p>
-    `;
-    const form = document.getElementById("formDatos");
-    form.prepend(infoVuelo);
-});
+        <div class="datos">
+            <label for="terminos_condiciones" class="checkboxLabel">
+                <input type="checkbox" id="terminos_condiciones" name="terminos_condiciones" class="formcheckbox" required>
+                Términos y condiciones
+            </label>
+        </div>
+    </form>
+</section>
+
+<div class="form-actions" style="margin-top: 20px; padding: 20px;">
+    <button type="button" class="btn" id="continuar">Continuar</button>
+    <button type="button" class="btn" id="cancelar" onclick="window.location.href='resultado_busqueda.html'">Cancelar</button>
+</div>
+
+<footer id="footer">
+    Todos los derechos reservados DreamFlying © 2025
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- 1. LÓGICA DE GENERACIÓN DINÁMICA DE FORMULARIOS DE PASAJEROS ---
+        const numAdultos = parseInt(sessionStorage.getItem('adultos')) || 1;
+        const numNinos = parseInt(sessionStorage.getItem('ninos')) || 0;
+        const totalPasajeros = numAdultos + numNinos;
+
+        const container = document.getElementById('pasajerosContainer');
+        const template = document.getElementById('pasajeroTemplate');
+        let contadorPasajeros = 1;
+
+        // Generar formularios para Adultos y Niños
+        const generarFormularios = (count, tipo) => {
+            for (let i = 0; i < count; i++) {
+                const clone = document.importNode(template.content, true);
+                const formGroup = clone.querySelector('.pasajero-form-group');
+                
+                // Reemplazar marcadores de posición [NUMERO] y [TIPO]
+                const html = formGroup.innerHTML
+                    .replace(/\[NUMERO\]/g, contadorPasajeros)
+                    .replace(/\[TIPO\]/g, tipo);
+                
+                formGroup.innerHTML = html;
+                container.appendChild(clone);
+                contadorPasajeros++;
+            }
+        };
+
+        generarFormularios(numAdultos, 'Adulto');
+        generarFormularios(numNinos, 'Niño');
+
+        // --- 2. LÓGICA DE VALIDACIÓN, RECOLECCIÓN Y GUARDADO DE DATOS ---
+        document.getElementById('continuar').addEventListener('click', function(event) {
+            
+            const contactoForm = document.getElementById('formDatosUnicos');
+            let isValid = true;
+            
+            // Función para verificar la validez de los campos requeridos en un contenedor
+            const checkFormValidity = (container) => {
+                let containerIsValid = true;
+                container.querySelectorAll('[required]').forEach(input => {
+                    if (!input.reportValidity()) {
+                        containerIsValid = false;
+                        if (isValid) input.focus(); 
+                        isValid = false; 
+                    }
+                });
+                return containerIsValid;
+            };
+
+            // Validar formularios de pasajeros (dinámicamente generados)
+            document.querySelectorAll('.pasajero-form-group').forEach(group => {
+                checkFormValidity(group);
+            });
+
+            // Validar formulario de contacto (estático)
+            checkFormValidity(contactoForm);
+            
+            
+            if (!isValid) {
+                return; // Detener la ejecución si no es válido
+            }
+
+            // A. Recolectar datos de Pasajeros
+            const datosPasajeros = [];
+            for (let i = 1; i <= totalPasajeros; i++) {
+                const pasajeroData = {
+                    tipo: i <= numAdultos ? 'Adulto' : 'Niño',
+                    nombre: document.getElementById('nombre-' + i).value,
+                    apellidoP: document.getElementById('apellidoP-' + i).value,
+                    apellidoM: document.getElementById('apellidoM-' + i).value,
+                    tipo_documento: document.getElementById('tipo_documento-' + i).value,
+                    numero_documento: document.getElementById('numero_documento-' + i).value,
+                };
+                datosPasajeros.push(pasajeroData);
+            }
+
+            // B. Recolectar datos de Contacto/Facturación
+            const datosContacto = {
+                telefono: document.getElementById('telefono').value,
+                correo: document.getElementById('correo').value,
+                razon_social: document.getElementById('razon_social').value,
+                nit_ci: document.getElementById('nit_ci').value,
+                condiciones_uso: document.getElementById('condiciones_uso').checked ? 'Aceptado' : 'No aceptado',
+                terminos_condiciones: document.getElementById('terminos_condiciones').checked ? 'Aceptado' : 'No aceptado'
+            };
+
+            // C. Guardar todos los datos en sessionStorage
+            sessionStorage.setItem('pasajerosData', JSON.stringify(datosPasajeros));
+            sessionStorage.setItem('contactoData', JSON.stringify(datosContacto));
+
+            // D. Redirigir
+            window.location.href = 'confirmacion.html';
+        });
+
+        // --- 3. LÓGICA DE ESTADO DE SESIÓN ---
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000';
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear(); 
+                localStorage.removeItem('historialReservas'); 
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+             estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    });
 </script>
 </body>
 </html>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const vuelo = JSON.parse(localStorage.getItem("vueloSeleccionado"));
-    if (!vuelo) return;
-
-    // Puedes mostrar los datos en un div o dentro del formulario
-    const infoVuelo = document.createElement("div");
-    infoVuelo.id = "infoVuelo";
-    infoVuelo.innerHTML = `
-        <h3>Vuelo seleccionado</h3>
-        <p>Aerolínea: ${vuelo.aerolinea}</p>
-        <p>Ruta: ${vuelo.origen} - ${vuelo.destino}</p>
-        <p>Salida: ${vuelo.salida} - Llegada: ${vuelo.llegada}</p>
-        <p>Precio: ${vuelo.precio} Bs</p>
-        <p>${vuelo.escala}</p>
-    `;
-    const form = document.getElementById("formDatos");
-    form.prepend(infoVuelo);
-});
-</script>
