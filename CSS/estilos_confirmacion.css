@@ -102,3 +102,129 @@ body {
     margin-top: 40px;
     font-size: 14px;
 }
+#contenedorBusqueda {
+    width: 90%;
+    max-width: 800px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+#tituloConfirmacion {
+    text-align: center;
+    font-size: 2.2em;
+    color: #1d4e89;
+    margin-bottom: 10px;
+}
+
+.cuadroResultado {
+    background-color: #ffffff;
+    border-radius: 12px; 
+    padding: 25px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+}
+
+#detalleHotel h3 {
+    color: #1d4e89;
+    font-size: 1.5em;
+    border-bottom: 2px solid #d0eaff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.informacion-hotel {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.detalles-hotel {
+    flex: 1;
+    min-width: 250px;
+}
+
+.detalles-hotel h4 {
+    color: #cc0000;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.detalles-hotel p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 5px;
+}
+
+#detalleHotel hr {
+    margin: 20px 0;
+    border: 0;
+    border-top: 1px dashed #cccccc;
+}
+
+#detalleHotel .precio {
+    padding-top: 10px;
+}
+
+#detalleHotel .precio p {
+    font-size: 1.8em !important;
+    color: #008000;
+    font-weight: bold;
+}
+
+#formularioPago h3 {
+    color: #1d4e89;
+    font-size: 1.5em;
+    border-bottom: 2px solid #d0eaff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+#formReservaHotel label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+#formReservaHotel input[type="text"],
+#formReservaHotel input[type="email"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+#formReservaHotel input:focus {
+    border-color: #1d4e89;
+    outline: none;
+    box-shadow: 0 0 5px rgba(29, 78, 137, 0.2);
+}
+
+#botonConfirmar {
+    width: 100%;
+    margin-top: 20px;
+    background-color: #008000;
+}
+
+#botonConfirmar:hover {
+    background-color: #006400;
+}
+
+@media (max-width: 600px) {
+    #contenedorBusqueda {
+        margin: 20px auto;
+    }
+    .cuadroResultado {
+        padding: 15px;
+    }
+    .detalles-hotel {
+        min-width: 100%;
+    }
+    #detalleHotel .precio p {
+        font-size: 1.4em !important;
+    }
+}

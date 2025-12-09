@@ -195,3 +195,137 @@ body {
     margin-top: 40px;
     font-size: 14px;
 }
+#listaResultados {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+#tituloResultados {
+    text-align: center;
+    font-size: 28px;
+    color: #1d4e89;
+    margin-bottom: 25px;
+}
+
+.cuadroResultado {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    min-height: 250px;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cuadroResultado:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.informacion-hotel {
+    display: flex;
+    gap: 20px;
+    flex: 3;
+    align-items: flex-start;
+}
+
+.imagen-hotel {
+    width: 200px;
+    height: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.detalles-hotel {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.detalles-hotel h4 {
+    font-size: 20px;
+    color: #1d4e89;
+    margin-bottom: 5px;
+}
+
+.detalles-hotel p {
+    font-size: 15px;
+    color: #555;
+}
+
+.resumen-precio {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-left: 20px;
+    border-left: 1px solid #eee;
+}
+
+.precio {
+    text-align: right;
+    margin-bottom: 15px;
+}
+
+.precio p:nth-child(2) {
+    color: #CC0000;
+}
+
+.boton-seleccionar {
+    background-color: #1d4e89;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.boton-seleccionar:hover {
+    background-color: #174b72;
+}
+
+#inicio a {
+    text-decoration: none;
+    color: inherit;
+}
+
+@media (max-width: 900px) {
+    .cuadroResultado {
+        flex-direction: column;
+        height: auto;
+        min-height: auto;
+    }
+    .informacion-hotel {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    .imagen-hotel {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin-bottom: 15px;
+    }
+    .resumen-precio {
+        border-left: none;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        align-items: center;
+        width: 100%;
+    }
+    .precio {
+        text-align: center;
+        width: 100%;
+    }
+}

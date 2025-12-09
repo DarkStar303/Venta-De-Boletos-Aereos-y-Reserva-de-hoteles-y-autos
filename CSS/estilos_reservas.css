@@ -213,3 +213,119 @@ body {
     font-size: 14px;
 }
 
+#reservaVuelos, #reservaHoteles {
+    color: #1d4e89;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+#reservaHoteles {
+    border-bottom: 2px solid #1d4e89;
+    padding-bottom: 3px;
+    color: #CC0000;
+}
+
+
+#listaReservas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.cuadroResultado {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+.informacion {
+    flex: 2.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    min-width: 60%;
+}
+
+.hotel-segmento {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.informacion .aerolinea {
+    width: 45px;
+    height: 45px;
+    filter: hue-rotate(180deg);
+}
+
+.textoaerolinea {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #1d4e89;
+}
+
+.resumen-pago {
+    flex: 1;
+    min-width: 35%; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: flex-end;
+    padding-left: 20px;
+    border-left: 1px dashed #e0e0e0;
+}
+
+.detalle-adicional {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.resumen-pago .precio {
+    text-align: right;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.resumen-pago .precio p:first-child {
+    color: #CC0000;
+    font-size: 1.15em;
+}
+
+.resumen-pago .precio p:last-child {
+    color: #008000 !important;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .cuadroResultado {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .informacion {
+        min-width: 100%;
+        margin-bottom: 15px;
+    }
+    .resumen-pago {
+        min-width: 100%;
+        border-left: none;
+        border-top: 1px dashed #e0e0e0;
+        padding-left: 0;
+        padding-top: 15px;
+        align-items: flex-start;
+    }
+    .resumen-pago .precio {
+        text-align: left;
+        width: 100%;
+    }
+    .detalle-adicional {
+        text-align: left;
+        width: 100%;
+    }
+}
