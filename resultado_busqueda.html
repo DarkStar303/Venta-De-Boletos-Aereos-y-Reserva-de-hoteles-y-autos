@@ -10,22 +10,21 @@
 
 <header id="encabezado">
     <div id="izquierda">
-        <a href="reservas.html" id="reserva">Reservas</a>
-        <a href="#" id="condiciones">Condiciones</a>
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
     </div>
-
     <div id="centro">
         <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
     </div>
-
     <div id="derecha">
-        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
     </div>
 </header>
 
 <main id="contenedorBusqueda">
     <section id="resultados" class="resultado">
-        <!-- Los vuelos se generarán dinámicamente aquí -->
     </section>
 
     <nav id="navegacion" class="navegacion">
@@ -47,81 +46,164 @@
     Todos los derechos reservados DreamFlying © 2025
 </footer>
 
-
-</body>
-</html>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const resultados = JSON.parse(localStorage.getItem("resultadosVuelos"));
-    const vuelos = resultados?.data || [];
+
+    // --- Variables de Estado y Datos ---
+    const infoBusqueda = JSON.parse(localStorage.getItem("infoBusqueda")) || {};
+    const tipoVuelo = infoBusqueda.tipoVuelo || "soloida";
+    const resultadosIda = JSON.parse(localStorage.getItem("resultadosVuelosIda")) || {};
+    const resultadosVuelta = JSON.parse(localStorage.getItem("resultadosVuelosVuelta")) || {};
     const contenedor = document.getElementById("resultados");
+    
+    // Limpiar selección anterior (solo al cargar la página por primera vez)
+    localStorage.removeItem("vueloSeleccionado");
 
-    contenedor.innerHTML = "";
+    // --- Función de CÁLCULO Y REDIRECCIÓN ---
+    function procederACompra() {
+        let vueloSel = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
+        let costoTotal = 0;
 
-    if (!vuelos || vuelos.length === 0) {
-        contenedor.innerHTML = "<p>No se encontraron vuelos.</p>";
-        return;
+        if (vueloSel.ida && vueloSel.ida.precio) {
+            costoTotal += parseFloat(vueloSel.ida.precio);
+        }
+        if (vueloSel.vuelta && vueloSel.vuelta.precio) {
+            costoTotal += parseFloat(vueloSel.vuelta.precio);
+        }
+
+        // 1. Guardar el costo total
+        sessionStorage.setItem('costoBoleto', costoTotal.toFixed(2));
+        
+        alert(`¡Compra lista!\nCosto Total: ${costoTotal.toFixed(2)} Bs.\nRedirigiendo a datos personales...`);
+
+        // 2. Redirigir a la siguiente etapa
+        window.location.href = "llenar datos.html";
     }
 
-    vuelos.forEach(vuelo => {
-        // Recorremos cada itinerario (ida o vuelta)
-        vuelo.itineraries.forEach(itinerario => {
-            const segments = itinerario.segments;
+    // --- Función de RENDERIZADO Y LÓGICA DE SELECCIÓN ---
+    function renderizarVuelos(vuelos, esIda) {
+        
+        contenedor.innerHTML = "";
+        
+        const titulo = document.createElement("h2");
+        titulo.textContent = esIda ? "✈️ Selecciona tu Vuelo de IDA" : "↩️ Selecciona tu Vuelo de VUELTA";
+        contenedor.appendChild(titulo);
 
-            const origen = segments[0].departure.iataCode;
-            const destino = segments[segments.length - 1].arrival.iataCode;
-            const salida = segments[0].departure.at.slice(11,16);
-            const llegada = segments[segments.length - 1].arrival.at.slice(11,16);
-            const aerolinea = segments[0].carrierCode;
-            const escalaTexto = segments.length > 1 
-                ? `Escalas: ${segments.slice(0, -1).map(s => s.arrival.iataCode).join(" → ")}`
-                : "Directo";
-            const precio = vuelo.price.total;
+        if (!vuelos || vuelos.length === 0) {
+            contenedor.innerHTML += "<p>No se encontraron vuelos para esta etapa.</p>";
+            return;
+        }
 
-            let logo = "default.svg";
-            if(aerolinea === "BO") logo = "Boa.svg";
-            else if(aerolinea === "AV") logo = "Avianca.svg";
-            else if(aerolinea === "IB") logo = "Iberia.svg";
+        vuelos.forEach((vuelo) => {
+            vuelo.itineraries.forEach(itinerario => {
 
-            // Crear el card
-            const card = document.createElement("article");
-            card.classList.add("cuadroResultado");
-            card.innerHTML = `
-                <div class="informacion">
-                    <img src="${logo}" alt="${aerolinea}" class="aerolinea">
-                    <div class="detalles">
-                        <h4 class="textoaerolinea">${aerolinea}</h4>
-                        <h5 class="escala">${escalaTexto}</h5>
-                        <p class="ruta">${origen} - ${destino}</p>
-                        <p class="equipaje">1 maleta facturada</p>
-                        <p class="tiempo">${salida} - ${llegada}</p>
+                const segments = itinerario.segments;
+                const origen = segments[0].departure.iataCode;
+                const destino = segments[segments.length - 1].arrival.iataCode;
+                const salida = segments[0].departure.at.slice(11,16);
+                const llegada = segments[segments.length - 1].arrival.at.slice(11,16);
+                const aerolinea = segments[0].carrierCode;
+                
+                const escalaTexto = segments.length > 1 
+                    ? `Escalas: ${segments.slice(0, -1).map(s => s.arrival.iataCode).join(" → ")}`
+                    : "Directo";
+                const precio = vuelo.price.total;
+
+                const card = document.createElement("article");
+                card.classList.add("cuadroResultado");
+
+                card.innerHTML = 
+                    `<div class="informacion">
+                        <img src="img/logos/${aerolinea}.svg" alt="${aerolinea}" class="aerolinea">
+                        <div class="detalles">
+                            <h4>${aerolinea}</h4>
+                            <p>${origen} - ${destino}</p>
+                            <p>${salida} - ${llegada}</p>
+                            <p>${escalaTexto}</p>
+                            <p class="precio-vuelo">${parseFloat(precio).toFixed(2)} Bs</p>
+                        </div>
                     </div>
-                </div>
-                <div class="precio">
-                    <p>${precio} Bs</p>
-                </div>
-                <div class="seleccion">
-                    <button class="boton seleccionarVuelo">Seleccionar</button>
-                </div>
-            `;
-            contenedor.appendChild(card);
+                    <button class="boton seleccionarVuelo" data-precio="${precio}">Seleccionar</button>`;
+                
+                contenedor.appendChild(card);
 
-            // Listener para seleccionar ida/vuelta
-            card.querySelector(".seleccionarVuelo").addEventListener("click", () => {
-                let vueloGuardado = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
+                // Lógica de selección del botón
+                card.querySelector(".seleccionarVuelo").addEventListener("click", () => {
+                    let vueloSel = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
+                    const datosVuelo = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
 
-                if (!vueloGuardado.ida) {
-                    vueloGuardado.ida = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
-                    alert("Vuelo de ida seleccionado. Ahora selecciona el vuelo de vuelta.");
-                } else if (!vueloGuardado.vuelta) {
-                    vueloGuardado.vuelta = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
-                    alert("Vuelo de vuelta seleccionado. Redirigiendo a llenar datos...");
-                    window.location.href = "llenar datos.html";
-                }
+                    // MODO: SOLO IDA
+                    if (tipoVuelo === "soloida") {
+                        vueloSel.ida = datosVuelo;
+                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
+                        procederACompra();
+                        return;
+                    }
 
-                localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloGuardado));
+                    // MODO: IDA Y VUELTA
+                    if (esIda) {
+                        // 1. Selecciona la IDA
+                        vueloSel.ida = datosVuelo;
+                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
+                        alert("Vuelo de ida seleccionado. Ahora elige la vuelta.");
+                        
+                        // 2. Cambia la vista a los vuelos de vuelta
+                        renderizarVuelos(resultadosVuelta.data || [], false); 
+                    } 
+                    else { 
+                        // Es el vuelo de vuelta (esIda es false)
+                        // 3. Selecciona la VUELTA
+                        vueloSel.vuelta = datosVuelo;
+                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
+                        
+                        // Llama a la función de cálculo y redirección
+                        procederACompra();
+                    }
+                });
             });
         });
-    });
+    }
+
+    // Inicializa la vista al cargar la página
+    if (tipoVuelo === "soloida" || tipoVuelo === "idayvuelta") {
+        renderizarVuelos(resultadosIda.data || [], true);
+    }
 });
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000';
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear(); 
+                localStorage.removeItem('historialReservas'); 
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+            estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    });
+</script>
+</body>
+</html>

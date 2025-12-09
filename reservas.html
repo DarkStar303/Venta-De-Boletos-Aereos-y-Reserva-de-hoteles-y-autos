@@ -3,128 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservas</title>
+    <title>Historial de Reservas</title>
     <link rel="stylesheet" href="css/estilos_reservas.css">
 </head>
 <body>
 
- <!-- encabezado con logo,inicio sesion etc -->
 <header id="encabezado">
     <div id="izquierda">
-        <a href="reservas.html" id="reserva">Reservas</a>
-        <a href="#" id="condiciones">Condiciones</a>
+        <a href="reservas.html" id="reserva">Reservas vuelo</a>
+        <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
     </div>
-
     <div id="centro">
         <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
     </div>
-
     <div id="derecha">
-        <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        <span id="estadoSesion">
+            <a href="inicio_sesion.html" id="entrar">Entrar</a>
+        </span>
     </div>
 </header>
 
 <main id="contenedorBusqueda">
-
-    <h2 id="tituloReservas">Reservas realizadas</h2>
-    <section id="resultados" class="resultado">
-
-        <!-- 1 -->
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="avion.png" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">Directo</h5>
-                    <p class="ruta">La Paz – Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">10:00 - 11:00</p>
-                </div>
-            </div>
-
-            <div class="precio">
-                <p>811 Bs</p>
-            </div>
-        </article>
-
-        <!-- 2 -->
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="avion.png" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Boa</h4>
-                    <h5 class="escala">Directo</h5>
-                    <p class="ruta">La Paz – Santa Cruz</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">14:00 - 15:00</p>
-                </div>
-            </div>
-
-            <div class="precio">
-                <p>760 Bs</p>
-            </div>
-        </article>
-
-        <!-- 3 -->
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="avion.png" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Ecojet</h4>
-                    <h5 class="escala">Directo</h5>
-                    <p class="ruta">La Paz – Cochabamba</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">09:00 - 12:00</p>
-                </div>
-            </div>
-
-            <div class="precio">
-                <p>920 Bs</p>
-            </div>
-        </article>
-
-        <!-- 4 -->
-        <article class="cuadroResultado">
-            <div class="informacion">
-                <img src="avion.png" alt="aerolinea" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">Amaszonas</h4>
-                    <h5 class="escala">Directo</h5>
-                    <p class="ruta">La Paz – Uyuni</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">07:00 - 09:00</p>
-                </div>
-            </div>
-
-            <div class="precio">
-                <p>680 Bs</p>
-            </div>
-        </article>
-
+    <h2 id="tituloReservas">Tus Viajes y Reservas</h2>
+    
+    <section id="listaReservas" class="resultado">
+        <p id="mensajeVacio" style="text-align: center; color: #777; font-size: 1.2em; padding: 20px; display: none;">
+            Parece que aún no tienes boletos confirmados. ¡Empieza tu búsqueda ahora!
+        </p>
     </section>
 
-    <!-- PAGINACIÓN IGUAL A LA DE BUSQUEDA -->
-    <nav id="navegacion" class="navegacion">
-        <a href="#" class="linknav">«</a>
-        <a href="#" class="linknav">‹</a>
-        <a href="#" class="linknav">1</a>
-        <span class="actual">2</span>
-        <span class="puntos">…</span>
-        <a href="#" class="linknav">16</a>
-        <a href="#" class="linknav">17</a>
-        <a href="#" class="linknav">›</a>
-        <a href="#" class="linknav">»</a>
-    </nav>
-
-    
-    <button id="inicio" class="boton"><a href="principal.html">Inicio</a></button>
+    <button id="inicio" class="boton"><a href="principal.html" style="text-decoration: none; color: inherit;">Volver al Inicio</a></button>
 
 </main>
 
-<!-- PIE DE PÁGINA -->
 <footer id="PiePagina">
     Todos los derechos reservados DreamFlying © 2025
 </footer>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializa ambas funciones al cargar la página
+        verificarEstadoSesion();
+        cargarReservas();
+    });
+
+    /**
+     * Muestra el estado de la sesión (Entrar o Email + Cerrar Sesión).
+     */
+    function verificarEstadoSesion() {
+        const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+        const estadoSesionElement = document.getElementById('estadoSesion');
+
+        if (estadoSesionElement && usuarioLogeado) {
+            const nombreSpan = document.createElement('span');
+            nombreSpan.textContent = usuarioLogeado;
+            nombreSpan.style.fontWeight = 'bold';
+            nombreSpan.style.color = '#1d4e89'; 
+
+            const cerrarSesionLink = document.createElement('a');
+            cerrarSesionLink.href = '#';
+            cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+            cerrarSesionLink.style.marginLeft = '10px';
+            cerrarSesionLink.style.color = '#CC0000'; 
+            cerrarSesionLink.style.textDecoration = 'none';
+            
+            cerrarSesionLink.onclick = function(e) {
+                e.preventDefault(); 
+                sessionStorage.clear();
+                alert('Sesión cerrada. Serás redirigido.');
+                window.location.href = 'principal.html'; 
+            };
+
+            estadoSesionElement.innerHTML = '';
+            estadoSesionElement.appendChild(nombreSpan);
+            estadoSesionElement.appendChild(cerrarSesionLink);
+        } else if (estadoSesionElement) {
+             estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
+        }
+    }
+
+
+    /**
+     * Carga y renderiza el historial de reservas de vuelos guardado en localStorage.
+     */
+    function cargarReservas() {
+        const historialReservasJSON = localStorage.getItem('historialReservas');
+        const listaReservas = document.getElementById('listaReservas');
+        const mensajeVacio = document.getElementById('mensajeVacio');
+        
+        listaReservas.innerHTML = ''; 
+
+        if (!historialReservasJSON) {
+            mensajeVacio.style.display = 'block';
+            return;
+        }
+
+        const historialReservas = JSON.parse(historialReservasJSON);
+
+        if (historialReservas.length === 0) {
+            mensajeVacio.style.display = 'block';
+            return;
+        }
+
+        mensajeVacio.style.display = 'none';
+
+        historialReservas.forEach((reserva, index) => {
+            const datosVuelo = reserva.datosVuelo || {}; 
+            const vueloIda = datosVuelo.ida || {}; 
+            const vueloVuelta = datosVuelo.vuelta; 
+
+            // Determinar etiqueta para el vuelo de IDA
+            const etiquetaIda = 'IDA'; 
+
+            // --- DETALLES DE VUELO DE IDA ---
+            let detallesHTML = `
+                <div class="vuelo-segmento">
+                    <h4 class="textoaerolinea">${vueloIda.aerolinea || 'Aerolínea Desconocida'} (${etiquetaIda})</h4>
+                    <p class="ruta"><strong>${vueloIda.origen || '?'}</strong> a <strong>${vueloIda.destino || '?'}</strong></p>
+                    <p class="tiempo">Salida: ${vueloIda.salida || '--'} | Llegada: ${vueloIda.llegada || '--'} | Escala: ${vueloIda.escala || 'No definido'}</p>
+                    </div>
+            `;
+
+            // --- DETALLES DE VUELO DE VUELTA (si existe) ---
+            if (vueloVuelta) {
+                detallesHTML += `
+                    <hr style="border-top: 1px dashed #ddd; margin: 10px 0;">
+                    <div class="vuelo-segmento">
+                        <h4 class="textoaerolinea">${vueloVuelta.aerolinea || 'Aerolínea Desconocida'} (VUELTA)</h4>
+                        <p class="ruta"><strong>${vueloVuelta.origen || '?'}</strong> a <strong>${vueloVuelta.destino || '?'}</strong></p>
+                        <p class="tiempo">Salida: ${vueloVuelta.salida || '--'} | Llegada: ${vueloVuelta.llegada || '--'} | Escala: ${vueloVuelta.escala || 'No definido'}</p>
+                        </div>
+                `;
+            }
+
+            // --- ESTRUCTURA DE LA TARJETA FINAL ---
+            const cardReserva = document.createElement('article');
+            cardReserva.classList.add('cuadroResultado'); 
+
+            cardReserva.innerHTML = `
+                <div class="informacion">
+                    <img src="avion.png" alt="Icono de Aerolínea" class="aerolinea">
+                    ${detallesHTML}
+                </div>
+
+                <div class="resumen-pago">
+                    <p class="detalle-adicional">
+                        Comprador: <strong>${reserva.nombrePasajeroPrincipal || 'N/A'}</strong>
+                    </p>
+                    <p class="detalle-adicional">
+                        Fecha de Compra: <strong>${reserva.fechaCompra || 'N/A'}</strong>
+                    </p>
+                    <div class="precio">
+                        <p style="font-weight: bold; font-size: 1.1em;">TOTAL PAGADO: ${reserva.costoPagado || '0.00'} Bs</p>
+                        <p style="font-size: 0.9em; color: green; font-weight: bold;">Estado: ${(reserva.estado || 'CONFIRMADO').toUpperCase()}</p>
+                    </div>
+                </div>
+            `;
+            
+            listaReservas.appendChild(cardReserva);
+        });
+    }
+</script>
 </body>
 </html>
