@@ -1,15 +1,31 @@
+// Función para mostrar el formulario seleccionado
+function mostrarFormulario(idFormulario) {
+    // Ocultar todos los formularios
+    document.getElementById('vuelos').style.display = 'none';
+    document.getElementById('hoteles').style.display = 'none';
+    document.getElementById('autos').style.display = 'none';
+
+    // Remover la clase 'activo' de todos los botones
+    document.getElementById('btnVuelos').classList.remove('activo');
+    document.getElementById('btnHoteles').classList.remove('activo');
+    document.getElementById('btnAutos').classList.remove('activo');
+
+    // Mostrar el formulario deseado
+    document.getElementById(idFormulario).style.display = 'block';
+
+    // Añadir la clase 'activo' al botón presionado
+    document.getElementById('btn' + idFormulario.charAt(0).toUpperCase() + idFormulario.slice(1)).classList.add('activo');
+}
+
 /* ===================================================
    0️⃣ Mapa de códigos IATA para ciudades
    =================================================== */
 const codigosIATA = {
-    // Bolivia
     "La Paz, Bolivia": "LPB",
     "Santa Cruz, Bolivia": "VVI",
     "Cochabamba, Bolivia": "CBB",
     "Sucre, Bolivia": "SRE",
     "Tarija, Bolivia": "TJA",
-
-    // América Latina
     "Buenos Aires, Argentina": "EZE",
     "Santiago, Chile": "SCL",
     "Lima, Perú": "LIM",
@@ -18,53 +34,73 @@ const codigosIATA = {
     "Montevideo, Uruguay": "MVD",
     "Asunción, Paraguay": "ASU",
     "Caracas, Venezuela": "CCS",
-
-    // Norteamérica
     "Miami, USA": "MIA",
     "New York, USA": "JFK",
     "Los Angeles, USA": "LAX",
     "Houston, USA": "IAH",
     "Cancún, México": "CUN",
-
-    // Europa
     "Madrid, España": "MAD",
     "Barcelona, España": "BCN",
     "París, Francia": "CDG",
     "Londres, Reino Unido": "LHR",
     "Roma, Italia": "FCO",
     "Lisboa, Portugal": "LIS",
-
-    // Otros
     "Sao Paulo, Brasil": "GRU",
     "Rio de Janeiro, Brasil": "GIG"
 };
 
 /* ===================================================
-   1️⃣ Función buscarVuelos() -> se llama al presionar el botón
+   1️⃣ Función buscarVuelos() 
    =================================================== */
 async function buscarVuelos() {
     const origenNombre = document.getElementById("origen").value;
     const destinoNombre = document.getElementById("destino").value;
     const fechaIda = document.getElementById("fechaida").value;
     const fechaVuelta = document.getElementById("fecharetorno").value;
-    const pasajeros = document.getElementById("nropasajeros").value;
+    
+    // OBTENER VALORES DE ADULTOS Y NIÑOS
+    const numAdultos = parseInt(document.getElementById("nropasajeros").value);
+    const numNinos = parseInt(document.getElementById("nropasajerosmenores").value);
+    const totalPasajeros = numAdultos + numNinos;
+    
+    const tipoVuelo = document.querySelector('input[name="seleccion"]:checked').value;
 
-    if (!origenNombre || !destinoNombre || !fechaIda) {
-        alert("Por favor, completa origen, destino y fecha de ida.");
+    // VALIDACIÓN: Máximo 9 pasajeros
+    if (totalPasajeros === 0) {
+        alert("Debe seleccionar al menos 1 pasajero (adulto o niño).");
         return;
     }
 
-    // Convertir nombre de ciudad a código IATA
+    if (totalPasajeros > 9) {
+        alert(`Error: El número máximo de pasajeros (adultos + niños) es 9. Usted seleccionó ${totalPasajeros}.`);
+        return;
+    }
+    
+    // GUARDAR LAS CANTIDADES DE PASAJEROS EN SESSION STORAGE
+    sessionStorage.setItem('adultos', numAdultos);
+    sessionStorage.setItem('ninos', numNinos);
+
+    // Guardar info de búsqueda
+    localStorage.setItem("infoBusqueda", JSON.stringify({
+        tipoVuelo,
+        origenNombre,
+        destinoNombre,
+        fechaIda,
+        fechaVuelta,
+        pasajeros: totalPasajeros 
+    }));
+
+    // Convertir ciudad a IATA
     const origen = codigosIATA[origenNombre];
     const destino = codigosIATA[destinoNombre];
 
     if (!origen || !destino) {
-        alert("Selecciona un origen y destino válido de la lista.");
+        alert("Selecciona ciudades válidas de la lista.");
         return;
     }
 
     try {
-        // Obtener token Amadeus
+        // --- Lógica de la API de Amadeus (Vuelos) ---
         const tokenResponse = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -74,35 +110,132 @@ async function buscarVuelos() {
                 client_secret: "LwlGqgvHjhfRYgrb"
             })
         });
-        const tokenData = await tokenResponse.json();
-        const token = tokenData.access_token;
+        const token = (await tokenResponse.json()).access_token;
 
-        // Llamada a la API de vuelos
-        const vueloResponse = await fetch(`https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origen}&destinationLocationCode=${destino}&departureDate=${fechaIda}&adults=${pasajeros}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const vueloData = await vueloResponse.json();
+        // Buscar IDA
+        const vueloIdaResp = await fetch(
+            `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origen}&destinationLocationCode=${destino}&departureDate=${fechaIda}&adults=${numAdultos}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const vueloIdaData = await vueloIdaResp.json();
+        localStorage.setItem("resultadosVuelosIda", JSON.stringify(vueloIdaData));
 
-        // Guardar resultados
-        localStorage.setItem("resultadosVuelos", JSON.stringify(vueloData));
+        // Solo ida → redirige directo
+        if (tipoVuelo === "soloida") {
+            localStorage.removeItem("resultadosVuelosVuelta"); 
+            window.location.href = "resultado_busqueda.html";
+            return;
+        }
 
-        // Redirigir a resultados
+        // Si es ida y vuelta → buscar vuelta
+        const vueloVueltaResp = await fetch(
+            `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${destino}&destinationLocationCode=${origen}&departureDate=${fechaVuelta}&adults=${numAdultos}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const vueloVueltaData = await vueloVueltaResp.json();
+        localStorage.setItem("resultadosVuelosVuelta", JSON.stringify(vueloVueltaData));
+
         window.location.href = "resultado_busqueda.html";
     } catch (error) {
         console.error("Error al buscar vuelos:", error);
-        alert("Hubo un error al buscar vuelos. Intenta nuevamente.");
+        alert("Hubo un error al buscar vuelos o en la conexión a la API.");
     }
 }
 
 /* ===================================================
-   2️⃣ Autocompletado de ciudades
+   2️⃣ Función buscarHoteles() - CORREGIDA CON TUS IDS
    =================================================== */
-const ciudades = Object.keys(codigosIATA); // usa las claves de codigosIATA
+async function buscarHoteles() {
+    // 1. Obtener valores del formulario de hoteles (USANDO TUS IDS: ciudad, fechaentrada, fechasalida)
+    const destinoNombre = document.getElementById("ciudad").value; 
+    const fechaCheckIn = document.getElementById("fechaentrada").value; 
+    const fechaCheckOut = document.getElementById("fechasalida").value; 
+    
+    // Usaremos nroadultos para la validación de huéspedes
+    const nroHuespedes = parseInt(document.getElementById("nroadultos").value); 
+
+    // 2. Validaciones básicas
+    if (!destinoNombre || !fechaCheckIn || !fechaCheckOut) {
+        alert("Por favor, completa la ciudad, la fecha de entrada y la fecha de salida.");
+        return;
+    }
+    
+    if (new Date(fechaCheckIn) >= new Date(fechaCheckOut)) {
+        alert("La fecha de salida debe ser posterior a la fecha de entrada.");
+        return;
+    }
+
+    if (nroHuespedes < 1) {
+        alert("Debe seleccionar al menos 1 adulto por habitación.");
+        return;
+    }
+    
+    // Convertir ciudad a IATA
+    const ciudadIATA = codigosIATA[destinoNombre];
+    if (!ciudadIATA) {
+        alert("Selecciona un destino de hotel válido de la lista de ciudades disponibles (ej: 'Madrid, España').");
+        return;
+    }
+
+    // 3. Guardar información de la búsqueda
+    localStorage.setItem("infoBusquedaHotel", JSON.stringify({
+        destino: destinoNombre,
+        checkIn: fechaCheckIn,
+        checkOut: fechaCheckOut,
+        huespedes: nroHuespedes,
+        ciudadIATA: ciudadIATA 
+    }));
+
+    try {
+        // A. OBTENER TOKEN DE AMADEUS 
+        const tokenResponse = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                grant_type: "client_credentials",
+                client_id: "0KA3uPvakMmHLMDWE2AKgcVxhfcAzMnL",
+                client_secret: "LwlGqgvHjhfRYgrb"
+            })
+        });
+        const token = (await tokenResponse.json()).access_token;
+
+        // B. BUSCAR HOTELES POR CÓDIGO DE CIUDAD IATA
+        const urlHoteles = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=${ciudadIATA}&subType=HOTEL,APART`;
+
+        const hotelesResp = await fetch(urlHoteles, { 
+            headers: { Authorization: `Bearer ${token}` } 
+        });
+        
+        const hotelesData = await hotelesResp.json();
+        
+        // Guardar los resultados de la búsqueda de hoteles
+        localStorage.setItem("resultadosHoteles", JSON.stringify(hotelesData));
+
+        // 4. Redirigir a la página de resultados de hotel
+        window.location.href = "resultado_hoteles.html";
+        
+    } catch (error) {
+        console.error("Error al buscar hoteles:", error);
+        alert("Hubo un error al buscar hoteles o en la conexión a la API.");
+    }
+}
+
+/* ===================================================
+   3️⃣ Función buscarAutos() (Placeholder)
+   =================================================== */
+function buscarAutos() {
+    alert("Función Buscar Autos aún no implementada.");
+}
+
+/* ===================================================
+   4️⃣ Autocompletado de ciudades
+   =================================================== */
+const ciudades = Object.keys(codigosIATA);
 
 function autocompletar(input, lista) {
     input.addEventListener("input", () => {
-        let dataListId = input.getAttribute("list");
-        let dataList = document.getElementById(dataListId);
+        const dataListId = input.getAttribute("list");
+        const dataList = document.getElementById(dataListId);
         dataList.innerHTML = "";
 
         const valor = input.value.toLowerCase();
@@ -116,28 +249,13 @@ function autocompletar(input, lista) {
     });
 }
 
-document.getElementById("origen").setAttribute("list", "ciudadesOrigen");
-document.getElementById("destino").setAttribute("list", "ciudadesDestino");
-
-let datalistOrigen = document.createElement("datalist");
-datalistOrigen.id = "ciudadesOrigen";
-document.body.appendChild(datalistOrigen);
-
-let datalistDestino = document.createElement("datalist");
-datalistDestino.id = "ciudadesDestino";
-document.body.appendChild(datalistDestino);
-
-autocompletar(document.getElementById("origen"), ciudades);
-autocompletar(document.getElementById("destino"), ciudades);
 
 /* ===================================================
-   3️⃣ Bloquear Fecha de Retorno si Solo Ida
+   5️⃣ Bloquear Fecha de Retorno si Solo Ida
    =================================================== */
-const soloIda = document.getElementById("soloida");
-const idaVuelta = document.getElementById("idavuelta");
-const fechaRetorno = document.getElementById("fecharetorno");
-
 function actualizarFechaRetorno() {
+    const soloIda = document.getElementById("soloida");
+    const fechaRetorno = document.getElementById("fecharetorno");
     if (soloIda.checked) {
         fechaRetorno.disabled = true;
         fechaRetorno.value = "";
@@ -146,89 +264,89 @@ function actualizarFechaRetorno() {
     }
 }
 
-soloIda.addEventListener("change", actualizarFechaRetorno);
-idaVuelta.addEventListener("change", actualizarFechaRetorno);
-actualizarFechaRetorno();
 
 /* ===================================================
-   4️⃣ Mostrar resultados de vuelos
+   6️⃣ Lógica DOMContentLoaded (Inicialización)
    =================================================== */
-function mostrarVuelos() {
-    const resultados = JSON.parse(localStorage.getItem("resultadosVuelos")) || {};
-    const vuelos = Array.isArray(resultados.data) ? resultados.data : [];
-    const contenedor = document.getElementById("resultados");
-    if (!contenedor) return;
+document.addEventListener('DOMContentLoaded', function() {
+    // --- Lógica de la sesión ---
+    const usuarioLogeado = sessionStorage.getItem('usuarioLogeado');
+    const estadoSesionElement = document.getElementById('estadoSesion');
 
-    if (vuelos.length === 0) {
-        contenedor.innerHTML = "<p>No se encontraron vuelos.</p>";
-        return;
+    if (estadoSesionElement && usuarioLogeado) {
+        
+        const nombreSpan = document.createElement('span');
+        nombreSpan.textContent = usuarioLogeado;
+        nombreSpan.style.fontWeight = 'bold';
+        nombreSpan.style.color = '#1d4e89'; 
+
+        const cerrarSesionLink = document.createElement('a');
+        cerrarSesionLink.href = '#';
+        cerrarSesionLink.textContent = ' (Cerrar Sesión)';
+        cerrarSesionLink.style.marginLeft = '10px';
+        cerrarSesionLink.style.color = '#CC0000';
+        cerrarSesionLink.style.textDecoration = 'none';
+        
+        cerrarSesionLink.onclick = function(e) {
+            e.preventDefault(); 
+            sessionStorage.clear(); 
+            localStorage.removeItem('historialReservas'); 
+            alert('Sesión cerrada. Serás redirigido.');
+            window.location.href = 'principal.html'; 
+        };
+
+        estadoSesionElement.innerHTML = '';
+        estadoSesionElement.appendChild(nombreSpan);
+        estadoSesionElement.appendChild(cerrarSesionLink);
+    } else if (estadoSesionElement) {
+         estadoSesionElement.innerHTML = '<a href="inicio_sesion.html" id="entrar">Entrar</a>';
     }
+    // --- Fin de manejo de la sesión ---
 
-    contenedor.innerHTML = "";
 
-    function obtenerLogo(aerolinea) {
-        switch(aerolinea) {
-            case "LA": return "Boliviana.svg";
-            case "AV": return "Avianca.svg";
-            case "BO": return "Boa.svg";
-            default: return "default.svg";
+    // ASIGNAR LOS EVENTOS CLIC PARA CAMBIAR FORMULARIO
+    const btnVuelos = document.getElementById('btnVuelos');
+    const btnHoteles = document.getElementById('btnHoteles');
+    const btnAutos = document.getElementById('btnAutos');
+    const soloIda = document.getElementById("soloida");
+    const idaVuelta = document.getElementById("idavuelta");
+
+    if (btnVuelos) btnVuelos.addEventListener('click', () => mostrarFormulario('vuelos'));
+    if (btnHoteles) btnHoteles.addEventListener('click', () => mostrarFormulario('hoteles'));
+    if (btnAutos) btnAutos.addEventListener('click', () => mostrarFormulario('autos'));
+    
+    // Eventos para actualizar la fecha de retorno
+    if (soloIda) soloIda.addEventListener("change", actualizarFechaRetorno);
+    if (idaVuelta) idaVuelta.addEventListener("change", actualizarFechaRetorno);
+
+    // Configuración de autocompletado general
+    // Creación de Datalists (necesario si no están en HTML)
+    const createDatalist = (id) => {
+        let dl = document.getElementById(id);
+        if (!dl) {
+            dl = document.createElement("datalist");
+            dl.id = id;
+            document.body.appendChild(dl);
         }
+    };
+    
+    // 1. Vuelos
+    createDatalist("ciudadesOrigen");
+    createDatalist("ciudadesDestino");
+    document.getElementById("origen").setAttribute("list", "ciudadesOrigen");
+    document.getElementById("destino").setAttribute("list", "ciudadesDestino");
+    autocompletar(document.getElementById("origen"), ciudades);
+    autocompletar(document.getElementById("destino"), ciudades);
+
+    // 2. Hoteles
+    const inputDestinoHotel = document.getElementById("ciudad"); // <-- LEE EL ID 'ciudad'
+    if (inputDestinoHotel) {
+        createDatalist("ciudadesHotel");
+        inputDestinoHotel.setAttribute("list", "ciudadesHotel");
+        autocompletar(inputDestinoHotel, ciudades);
     }
-
-    vuelos.forEach(vuelo => {
-        const itinerarios = vuelo.itineraries || [];
-        if (itinerarios.length === 0) return;
-
-        const segmentos = itinerarios[0].segments || [];
-        if (segmentos.length === 0) return;
-
-        const origen = segmentos[0].departure.iataCode;
-        const destino = segmentos[segmentos.length - 1].arrival.iataCode;
-        const salida = segmentos[0].departure.at.slice(11,16);
-        const llegada = segmentos[segmentos.length - 1].arrival.at.slice(11,16);
-        const aerolinea = segmentos[0].carrierCode;
-        const precio = vuelo.price?.total || "N/A";
-        const escala = segmentos.length > 1 ? `${segmentos.length - 1} escala(s)` : "Directo";
-
-        const card = document.createElement("article");
-        card.classList.add("cuadroResultado");
-        card.innerHTML = `
-            <div class="informacion">
-                <img src="img/logos/${obtenerLogo(aerolinea)}" alt="${aerolinea}" class="aerolinea">
-                <div class="detalles">
-                    <h4 class="textoaerolinea">${aerolinea}</h4>
-                    <h5 class="escala">${escala}</h5>
-                    <p class="ruta">${origen} - ${destino}</p>
-                    <p class="equipaje">1 maleta facturada</p>
-                    <p class="tiempo">${salida} - ${llegada}</p>
-                </div>
-            </div>
-            <div class="precio">
-                <p>${precio} Bs</p>
-            </div>
-            <div class="seleccion">
-                <a href="#" class="boton seleccionarVuelo">Seleccionar</a>
-            </div>
-        `;
-        contenedor.appendChild(card);
-
-        // Evento click para guardar vuelo y redirigir
-        const boton = card.querySelector(".seleccionarVuelo");
-        boton.addEventListener("click", (e) => {
-            e.preventDefault();
-            const vueloSeleccionado = { origen, destino, salida, llegada, aerolinea, precio, escala };
-            localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSeleccionado));
-            window.location.href = "llenar datos.html"; // aquí va el nombre correcto
-        });
-    });
-}
-
-/* ===================================================
-   Ejecutar mostrarVuelos al cargar resultado_busqueda.html
-   =================================================== */
-document.addEventListener("DOMContentLoaded", () => {
-    if (document.getElementById("resultados")) {
-        mostrarVuelos();
-    }
+    
+    // Inicialización al cargar la página
+    mostrarFormulario('vuelos');
+    actualizarFechaRetorno();
 });
-
