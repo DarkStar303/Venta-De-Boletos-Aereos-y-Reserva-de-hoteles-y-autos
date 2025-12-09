@@ -14,7 +14,7 @@
         <a href="reservas_hoteles.html" id="reserva">Reservas hotel</a>
     </div>
     <div id="centro">
-        <a href="principal.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
+        <a href="index.html" class="logo"><img src="LogoOficial.png" alt="Logo"></a>
     </div>
     <div id="derecha">
         <span id="estadoSesion">
@@ -29,7 +29,7 @@
     <section id="listaResultados" class="resultado">
     </section>
 
-    <button id="inicio" class="boton"><a href="principal.html" style="text-decoration: none; color: white;">Nueva Búsqueda</a></button>
+    <button id="inicio" class="boton"><a href="index.html" style="text-decoration: none; color: white;">Nueva Búsqueda</a></button>
 </main>
 
 <footer id="PiePagina">
@@ -160,7 +160,7 @@
                 sessionStorage.clear(); 
                 localStorage.removeItem('historialReservas'); 
                 alert('Sesión cerrada. Serás redirigido.');
-                window.location.href = 'principal.html'; 
+                window.location.href = 'index.html'; 
             };
 
             estadoSesionElement.innerHTML = '';
