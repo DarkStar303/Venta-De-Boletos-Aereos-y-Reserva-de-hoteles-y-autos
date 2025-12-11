@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nombreSpan.style.color = '#1d4e89'; 
 
         const cerrarSesionLink = document.createElement('a');
-        cerrarSesionLink.href = '#';
+        cerrarSesionLink.href = 'index.html';
         cerrarSesionLink.textContent = ' (Cerrar Sesión)';
         cerrarSesionLink.style.marginLeft = '10px';
         cerrarSesionLink.style.color = '#CC0000';
@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sessionStorage.clear(); 
             localStorage.removeItem('historialReservas'); 
             alert('Sesión cerrada. Serás redirigido.');
-            window.location.href = 'principal.html'; 
+            window.location.href = 'index.html'; 
         };
 
         estadoSesionElement.innerHTML = '';
