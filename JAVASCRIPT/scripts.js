@@ -50,37 +50,41 @@ const codigosIATA = {
 };
 
 /* ===================================================
-   1️⃣ Función buscarVuelos() 
+   1️⃣ Función buscarVuelos() - IMPLEMENTACIÓN SIMULADOR
    =================================================== */
-async function buscarVuelos() {
+function buscarVuelos() {
     const origenNombre = document.getElementById("origen").value;
     const destinoNombre = document.getElementById("destino").value;
     const fechaIda = document.getElementById("fechaida").value;
     const fechaVuelta = document.getElementById("fecharetorno").value;
     
-    // OBTENER VALORES DE ADULTOS Y NIÑOS
-    const numAdultos = parseInt(document.getElementById("nropasajeros").value);
-    const numNinos = parseInt(document.getElementById("nropasajerosmenores").value);
+    // OBTENER VALORES DE PASAJEROS
+    const numAdultos = parseInt(document.getElementById("nropasajeros").value) || 0;
+    const numNinos = parseInt(document.getElementById("nropasajerosmenores").value) || 0;
     const totalPasajeros = numAdultos + numNinos;
     
+    // Obtiene el valor del radio seleccionado (soloida o idavuelta)
     const tipoVuelo = document.querySelector('input[name="seleccion"]:checked').value;
 
-    // VALIDACIÓN: Máximo 9 pasajeros
+    // VALIDACIONES
     if (totalPasajeros === 0) {
         alert("Debe seleccionar al menos 1 pasajero (adulto o niño).");
         return;
     }
-
     if (totalPasajeros > 9) {
         alert(`Error: El número máximo de pasajeros (adultos + niños) es 9. Usted seleccionó ${totalPasajeros}.`);
         return;
     }
-    
-    // GUARDAR LAS CANTIDADES DE PASAJEROS EN SESSION STORAGE
+    const origen = codigosIATA[origenNombre];
+    const destino = codigosIATA[destinoNombre];
+    if (!origen || !destino) {
+        alert("Selecciona ciudades válidas de la lista.");
+        return;
+    }
+
+    // GUARDAR INFO DE BÚSQUEDA Y PASAJEROS
     sessionStorage.setItem('adultos', numAdultos);
     sessionStorage.setItem('ninos', numNinos);
-
-    // Guardar info de búsqueda
     localStorage.setItem("infoBusqueda", JSON.stringify({
         tipoVuelo,
         origenNombre,
@@ -90,104 +94,99 @@ async function buscarVuelos() {
         pasajeros: totalPasajeros 
     }));
 
-    // Convertir ciudad a IATA
-    const origen = codigosIATA[origenNombre];
-    const destino = codigosIATA[destinoNombre];
+    // ===========================================
+    // SIMULADOR DE DATOS DE VUELOS (Generación Ficticia)
+    // ===========================================
 
-    if (!origen || !destino) {
-        alert("Selecciona ciudades válidas de la lista.");
+    // --- Simular datos de IDA ---
+    const resultadosSimuladosIda = {
+        data: [
+            { 
+                id: "V_IDA_1", aerolinea: "Air Sim", 
+                precio: (250 * totalPasajeros) + Math.floor(Math.random() * 100), 
+                duracion: "6h 30m", origen: origen, destino: destino, 
+                salida: fechaIda + "T08:00:00", llegada: fechaIda + "T14:30:00" 
+            },
+            { 
+                id: "V_IDA_2", aerolinea: "SimuJets", 
+                precio: (350 * totalPasajeros) + Math.floor(Math.random() * 150), 
+                duracion: "7h 15m", origen: origen, destino: destino, 
+                salida: fechaIda + "T15:30:00", llegada: fechaIda + "T22:45:00" 
+            }
+        ]
+    };
+    localStorage.setItem("resultadosVuelosIda", JSON.stringify(resultadosSimuladosIda));
+
+    // Si es solo ida → redirige directo
+    if (tipoVuelo === "soloida") {
+        localStorage.removeItem("resultadosVuelosVuelta"); 
+        window.location.href = "resultado_busqueda.html";
         return;
     }
 
-    try {
-        // --- Lógica de la API de Amadeus (Vuelos) ---
-        const tokenResponse = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams({
-                grant_type: "client_credentials",
-                client_id: "0KA3uPvakMmHLMDWE2AKgcVxhfcAzMnL",
-                client_secret: "LwlGqgvHjhfRYgrb"
-            })
-        });
-        const token = (await tokenResponse.json()).access_token;
+    // Si es ida y vuelta → Simular datos de VUELTA
+    const resultadosSimuladosVuelta = {
+        data: [
+            { 
+                id: "V_VTA_1", aerolinea: "Air Sim", 
+                precio: (260 * totalPasajeros) + Math.floor(Math.random() * 90), 
+                duracion: "6h 45m", origen: destino, destino: origen, 
+                salida: fechaVuelta + "T10:00:00", llegada: fechaVuelta + "T16:45:00" 
+            },
+            { 
+                id: "V_VTA_2", aerolinea: "Global Sim", 
+                precio: (340 * totalPasajeros) + Math.floor(Math.random() * 120), 
+                duracion: "7h 00m", origen: destino, destino: origen, 
+                salida: fechaVuelta + "T18:00:00", llegada: fechaVuelta + "T01:00:00" 
+            }
+        ]
+    };
+    localStorage.setItem("resultadosVuelosVuelta", JSON.stringify(resultadosSimuladosVuelta));
 
-        // Buscar IDA
-        const vueloIdaResp = await fetch(
-            `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${origen}&destinationLocationCode=${destino}&departureDate=${fechaIda}&adults=${numAdultos}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const vueloIdaData = await vueloIdaResp.json();
-        localStorage.setItem("resultadosVuelosIda", JSON.stringify(vueloIdaData));
-
-        // Solo ida → redirige directo
-        if (tipoVuelo === "soloida") {
-            localStorage.removeItem("resultadosVuelosVuelta"); 
-            window.location.href = "resultado_busqueda.html";
-            return;
-        }
-
-        // Si es ida y vuelta → buscar vuelta
-        const vueloVueltaResp = await fetch(
-            `https://test.api.amadeus.com/v2/shopping/flight-offers?originLocationCode=${destino}&destinationLocationCode=${origen}&departureDate=${fechaVuelta}&adults=${numAdultos}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        const vueloVueltaData = await vueloVueltaResp.json();
-        localStorage.setItem("resultadosVuelosVuelta", JSON.stringify(vueloVueltaData));
-
-        window.location.href = "resultado_busqueda.html";
-    } catch (error) {
-        console.error("Error al buscar vuelos:", error);
-        alert("Hubo un error al buscar vuelos o en la conexión a la API.");
-    }
+    // Redirigir a la página de resultados
+    window.location.href = "resultado_busqueda.html";
 }
 
+
 /* ===================================================
-   2️⃣ Función buscarHoteles() - CORREGIDA CON TUS IDS
+   2️⃣ Función buscarHoteles() - ORIGINAL (Usa API Amadeus)
    =================================================== */
 async function buscarHoteles() {
-    // 1. Obtener valores del formulario de hoteles (USANDO TUS IDS: ciudad, fechaentrada, fechasalida)
-    const destinoNombre = document.getElementById("ciudad").value; 
-    const fechaCheckIn = document.getElementById("fechaentrada").value; 
-    const fechaCheckOut = document.getElementById("fechasalida").value; 
-    
-    // Usaremos nroadultos para la validación de huéspedes
-    const nroHuespedes = parseInt(document.getElementById("nroadultos").value); 
+    const destinoNombre = document.getElementById("ciudad").value;  
+    const fechaCheckIn = document.getElementById("fechaentrada").value;  
+    const fechaCheckOut = document.getElementById("fechasalida").value;  
+    const nroHuespedes = parseInt(document.getElementById("nroadultos").value);  
 
-    // 2. Validaciones básicas
     if (!destinoNombre || !fechaCheckIn || !fechaCheckOut) {
         alert("Por favor, completa la ciudad, la fecha de entrada y la fecha de salida.");
         return;
     }
-    
     if (new Date(fechaCheckIn) >= new Date(fechaCheckOut)) {
         alert("La fecha de salida debe ser posterior a la fecha de entrada.");
         return;
     }
-
     if (nroHuespedes < 1) {
         alert("Debe seleccionar al menos 1 adulto por habitación.");
         return;
     }
     
-    // Convertir ciudad a IATA
     const ciudadIATA = codigosIATA[destinoNombre];
     if (!ciudadIATA) {
-        alert("Selecciona un destino de hotel válido de la lista de ciudades disponibles (ej: 'Madrid, España').");
+        alert("Selecciona un destino de hotel válido de la lista.");
         return;
     }
 
-    // 3. Guardar información de la búsqueda
     localStorage.setItem("infoBusquedaHotel", JSON.stringify({
         destino: destinoNombre,
         checkIn: fechaCheckIn,
         checkOut: fechaCheckOut,
         huespedes: nroHuespedes,
-        ciudadIATA: ciudadIATA 
+        ciudadIATA: ciudadIATA  
     }));
 
     try {
-        // A. OBTENER TOKEN DE AMADEUS 
+        // --- Lógica de la API de Amadeus (Hoteles) ---
+        // (Se ignora la implementación real de API aquí por simplicidad)
         const tokenResponse = await fetch("https://test.api.amadeus.com/v1/security/oauth2/token", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -199,19 +198,14 @@ async function buscarHoteles() {
         });
         const token = (await tokenResponse.json()).access_token;
 
-        // B. BUSCAR HOTELES POR CÓDIGO DE CIUDAD IATA
         const urlHoteles = `https://test.api.amadeus.com/v1/reference-data/locations/hotels/by-city?cityCode=${ciudadIATA}&subType=HOTEL,APART`;
 
-        const hotelesResp = await fetch(urlHoteles, { 
-            headers: { Authorization: `Bearer ${token}` } 
+        const hotelesResp = await fetch(urlHoteles, {  
+            headers: { Authorization: `Bearer ${token}` }  
         });
-        
         const hotelesData = await hotelesResp.json();
         
-        // Guardar los resultados de la búsqueda de hoteles
         localStorage.setItem("resultadosHoteles", JSON.stringify(hotelesData));
-
-        // 4. Redirigir a la página de resultados de hotel
         window.location.href = "resultado_hoteles.html";
         
     } catch (error) {
@@ -249,24 +243,24 @@ function autocompletar(input, lista) {
     });
 }
 
-
 /* ===================================================
    5️⃣ Bloquear Fecha de Retorno si Solo Ida
    =================================================== */
 function actualizarFechaRetorno() {
     const soloIda = document.getElementById("soloida");
     const fechaRetorno = document.getElementById("fecharetorno");
-    if (soloIda.checked) {
+    
+    // Verifica si el radio 'Solo Ida' está marcado
+    if (soloIda && soloIda.checked) {
         fechaRetorno.disabled = true;
         fechaRetorno.value = "";
-    } else {
+    } else if (fechaRetorno) {
         fechaRetorno.disabled = false;
     }
 }
 
-
 /* ===================================================
-   6️⃣ Lógica DOMContentLoaded (Inicialización)
+   6️⃣ Lógica DOMContentLoaded (Inicialización y Sesión)
    =================================================== */
 document.addEventListener('DOMContentLoaded', function() {
     // --- Lógica de la sesión ---
@@ -274,7 +268,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const estadoSesionElement = document.getElementById('estadoSesion');
 
     if (estadoSesionElement && usuarioLogeado) {
-        
         const nombreSpan = document.createElement('span');
         nombreSpan.textContent = usuarioLogeado;
         nombreSpan.style.fontWeight = 'bold';
@@ -304,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Fin de manejo de la sesión ---
 
 
-    // ASIGNAR LOS EVENTOS CLIC PARA CAMBIAR FORMULARIO
+    // ASIGNAR EVENTOS CLIC PARA CAMBIAR FORMULARIO
     const btnVuelos = document.getElementById('btnVuelos');
     const btnHoteles = document.getElementById('btnHoteles');
     const btnAutos = document.getElementById('btnAutos');
@@ -319,8 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (soloIda) soloIda.addEventListener("change", actualizarFechaRetorno);
     if (idaVuelta) idaVuelta.addEventListener("change", actualizarFechaRetorno);
 
-    // Configuración de autocompletado general
-    // Creación de Datalists (necesario si no están en HTML)
+    // Función para asegurar que el datalist exista
     const createDatalist = (id) => {
         let dl = document.getElementById(id);
         if (!dl) {
@@ -330,19 +322,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // 1. Vuelos
-    createDatalist("ciudadesOrigen");
-    createDatalist("ciudadesDestino");
-    document.getElementById("origen").setAttribute("list", "ciudadesOrigen");
-    document.getElementById("destino").setAttribute("list", "ciudadesDestino");
-    autocompletar(document.getElementById("origen"), ciudades);
-    autocompletar(document.getElementById("destino"), ciudades);
+    // 1. Vuelos - Autocompletado
+    const inputOrigenVuelo = document.getElementById("origen");
+    const inputDestinoVuelo = document.getElementById("destino");
+    if (inputOrigenVuelo && inputDestinoVuelo) {
+        createDatalist("ciudadesOrigen");
+        createDatalist("ciudadesDestino");
+        autocompletar(inputOrigenVuelo, ciudades);
+        autocompletar(inputDestinoVuelo, ciudades);
+    }
 
-    // 2. Hoteles
-    const inputDestinoHotel = document.getElementById("ciudad"); // <-- LEE EL ID 'ciudad'
+    // 2. Hoteles - Autocompletado
+    const inputDestinoHotel = document.getElementById("ciudad"); 
     if (inputDestinoHotel) {
         createDatalist("ciudadesHotel");
-        inputDestinoHotel.setAttribute("list", "ciudadesHotel");
         autocompletar(inputDestinoHotel, ciudades);
     }
     

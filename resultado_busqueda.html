@@ -25,7 +25,7 @@
 
 <main id="contenedorBusqueda">
     <section id="resultados" class="resultado">
-    </section>
+        </section>
 
     <nav id="navegacion" class="navegacion">
         <a href="#" class="linknav">«</a>
@@ -51,12 +51,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Variables de Estado y Datos ---
     const infoBusqueda = JSON.parse(localStorage.getItem("infoBusqueda")) || {};
-    const tipoVuelo = infoBusqueda.tipoVuelo || "soloida";
+    
+    // Obtiene y limpia el modo de vuelo: 'soloida' o 'idayvuelta'
+    let tipoVuelo = (infoBusqueda.tipoVuelo || "soloida").toLowerCase().trim();
+    
+    // Datos cargados desde el simulador
     const resultadosIda = JSON.parse(localStorage.getItem("resultadosVuelosIda")) || {};
     const resultadosVuelta = JSON.parse(localStorage.getItem("resultadosVuelosVuelta")) || {};
     const contenedor = document.getElementById("resultados");
     
-    // Limpiar selección anterior (solo al cargar la página por primera vez)
+    // Limpiar selección anterior al cargar
     localStorage.removeItem("vueloSeleccionado");
 
     // --- Función de CÁLCULO Y REDIRECCIÓN ---
@@ -71,103 +75,101 @@ document.addEventListener("DOMContentLoaded", () => {
             costoTotal += parseFloat(vueloSel.vuelta.precio);
         }
 
-        // 1. Guardar el costo total
         sessionStorage.setItem('costoBoleto', costoTotal.toFixed(2));
-        
         alert(`¡Compra lista!\nCosto Total: ${costoTotal.toFixed(2)} Bs.\nRedirigiendo a datos personales...`);
-
-        // 2. Redirigir a la siguiente etapa
         window.location.href = "llenar datos.html";
     }
 
-    // --- Función de RENDERIZADO Y LÓGICA DE SELECCIÓN ---
+    // --- Función de RENDERIZADO ADAPTADO AL SIMULADOR ---
     function renderizarVuelos(vuelos, esIda) {
         
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
         contenedor.innerHTML = "";
         
         const titulo = document.createElement("h2");
-        titulo.textContent = esIda ? "✈️ Selecciona tu Vuelo de IDA" : "↩️ Selecciona tu Vuelo de VUELTA";
+        const direccion = esIda 
+            ? `${infoBusqueda.origenNombre} → ${infoBusqueda.destinoNombre}`
+            : `${infoBusqueda.destinoNombre} → ${infoBusqueda.origenNombre}`;
+            
+        titulo.textContent = (esIda ? "✈️ IDA: " : "↩️ VUELTA: ") + direccion;
         contenedor.appendChild(titulo);
 
+        // Validación de resultados
         if (!vuelos || vuelos.length === 0) {
-            contenedor.innerHTML += "<p>No se encontraron vuelos para esta etapa.</p>";
+            contenedor.innerHTML += `<div class="mensaje-error">
+                <p>No se encontraron vuelos disponibles para el trayecto de ${esIda ? "IDA" : "VUELTA"}.</p>
+                <button class="boton" onclick="window.history.back()">Volver a buscar</button>
+            </div>`;
             return;
         }
 
         vuelos.forEach((vuelo) => {
-            vuelo.itineraries.forEach(itinerario => {
+            
+            // Extracción de datos del objeto simulado (estructura simple)
+            const origen = vuelo.origen;
+            const destino = vuelo.destino;
+            const aerolinea = vuelo.aerolinea;
+            const precio = vuelo.precio;
+            const duracion = vuelo.duracion;
+            const salida = vuelo.salida.slice(11, 16); 
+            const llegada = vuelo.llegada.slice(11, 16); 
+            const escalaTexto = "Directo"; // Asumido para la simulación
+            
+            const card = document.createElement("article");
+            card.classList.add("cuadroResultado");
 
-                const segments = itinerario.segments;
-                const origen = segments[0].departure.iataCode;
-                const destino = segments[segments.length - 1].arrival.iataCode;
-                const salida = segments[0].departure.at.slice(11,16);
-                const llegada = segments[segments.length - 1].arrival.at.slice(11,16);
-                const aerolinea = segments[0].carrierCode;
-                
-                const escalaTexto = segments.length > 1 
-                    ? `Escalas: ${segments.slice(0, -1).map(s => s.arrival.iataCode).join(" → ")}`
-                    : "Directo";
-                const precio = vuelo.price.total;
-
-                const card = document.createElement("article");
-                card.classList.add("cuadroResultado");
-
-                card.innerHTML = 
-                    `<div class="informacion">
-                        <img src="img/logos/${aerolinea}.svg" alt="${aerolinea}" class="aerolinea">
-                        <div class="detalles">
-                            <h4>${aerolinea}</h4>
-                            <p>${origen} - ${destino}</p>
-                            <p>${salida} - ${llegada}</p>
-                            <p>${escalaTexto}</p>
-                            <p class="precio-vuelo">${parseFloat(precio).toFixed(2)} Bs</p>
-                        </div>
+            card.innerHTML = 
+                `<div class="informacion">
+                    <img src="img/logos/${aerolinea}.svg" alt="${aerolinea}" class="aerolinea" onerror="this.style.display='none'">
+                    <div class="detalles">
+                        <h4>${aerolinea}</h4>
+                        <p><strong>${origen}</strong> ➝ <strong>${destino}</strong></p>
+                        <p>Salida: ${salida} - Llegada: ${llegada} (${duracion})</p>
+                        <p>${escalaTexto}</p>
+                        <p class="precio-vuelo">${parseFloat(precio).toFixed(2)} Bs</p>
                     </div>
-                    <button class="boton seleccionarVuelo" data-precio="${precio}">Seleccionar</button>`;
+                </div>
+                <button class="boton seleccionarVuelo">Seleccionar</button>`;
+            
+            contenedor.appendChild(card);
+
+            // Lógica de selección del botón
+            card.querySelector(".seleccionarVuelo").addEventListener("click", () => {
+                let vueloSel = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
                 
-                contenedor.appendChild(card);
+                const datosVuelo = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto, duracion };
 
-                // Lógica de selección del botón
-                card.querySelector(".seleccionarVuelo").addEventListener("click", () => {
-                    let vueloSel = JSON.parse(localStorage.getItem("vueloSeleccionado")) || {};
-                    const datosVuelo = { origen, destino, salida, llegada, aerolinea, precio, escala: escalaTexto };
+                // 1. Si es IDA
+                if (esIda) {
+                    vueloSel.ida = datosVuelo;
+                    localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
 
-                    // MODO: SOLO IDA
-                    if (tipoVuelo === "soloida") {
-                        vueloSel.ida = datosVuelo;
-                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
-                        procederACompra();
-                        return;
-                    }
-
-                    // MODO: IDA Y VUELTA
-                    if (esIda) {
-                        // 1. Selecciona la IDA
-                        vueloSel.ida = datosVuelo;
-                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
-                        alert("Vuelo de ida seleccionado. Ahora elige la vuelta.");
+                    // REQUERIMIENTO: Si es ida y vuelta, mostrar la vuelta. Si no, finalizar.
+                    if (tipoVuelo === "idayvuelta") {
+                        alert("Vuelo de ida guardado. Ahora selecciona el de vuelta.");
                         
-                        // 2. Cambia la vista a los vuelos de vuelta
-                        renderizarVuelos(resultadosVuelta.data || [], false); 
-                    } 
-                    else { 
-                        // Es el vuelo de vuelta (esIda es false)
-                        // 3. Selecciona la VUELTA
-                        vueloSel.vuelta = datosVuelo;
-                        localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
-                        
-                        // Llama a la función de cálculo y redirección
+                        // Renderizar los resultados de la VUELTA
+                        const datosVuelta = resultadosVuelta.data || [];
+                        renderizarVuelos(datosVuelta, false); 
+                    } else {
+                        // Es solo ida, finalizar compra
                         procederACompra();
                     }
-                });
+                } 
+                // 2. Si es VUELTA (esIda == false)
+                else {
+                    vueloSel.vuelta = datosVuelo;
+                    localStorage.setItem("vueloSeleccionado", JSON.stringify(vueloSel));
+                    // Finalizar compra (ya se seleccionó ida y vuelta)
+                    procederACompra();
+                }
             });
         });
     }
 
-    // Inicializa la vista al cargar la página
-    if (tipoVuelo === "soloida" || tipoVuelo === "idayvuelta") {
-        renderizarVuelos(resultadosIda.data || [], true);
-    }
+    // Inicializa la vista mostrando los resultados de IDA
+    renderizarVuelos(resultadosIda.data || [], true);
 });
 </script>
 

@@ -50,13 +50,13 @@
         <input type="radio" name="seleccion" id="soloida" value="soloida">
 
         <label for="idavuelta">Ida y Vuelta</label>
-        <input type="radio" name="seleccion" id="idavuelta" value="idavuelta" checked>
+        <input type="radio" name="seleccion" id="idavuelta" value="idayvuelta" checked>
 
         <label for="origen" class="FormLabel">Origen</label>
-        <input type="text" id="origen" class="FormInput">
+        <input type="text" id="origen" class="FormInput" list="ciudadesOrigen">
 
         <label for="destino" class="FormLabel">Destino</label>
-        <input type="text" id="destino" class="FormInput">
+        <input type="text" id="destino" class="FormInput" list="ciudadesDestino">
 
         <label for="fechaida" class="FormLabel">Fecha de Ida</label>
         <input type="date" id="fechaida" class="FormInput">
@@ -100,7 +100,7 @@
         <h2>Reserva de Hoteles</h2>
         
         <label for="ciudad" class="FormLabel">Ciudad</label>
-        <input type="text" id="ciudad" class="FormInput">
+        <input type="text" id="ciudad" class="FormInput" list="ciudadesHotel">
 
         <label for="fecha-entrada" class="FormLabel">Fecha entrada</label>
         <input type="date" id="fechaentrada" class="FormInput">
