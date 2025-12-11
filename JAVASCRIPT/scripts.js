@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nombreSpan.style.color = '#1d4e89'; 
 
         const cerrarSesionLink = document.createElement('a');
-        cerrarSesionLink.href = 'index.html';
+        cerrarSesionLink.href = '#';
         cerrarSesionLink.textContent = ' (Cerrar Sesión)';
         cerrarSesionLink.style.marginLeft = '10px';
         cerrarSesionLink.style.color = '#CC0000';
